@@ -19,6 +19,9 @@ public class TheClient {
 	static final byte CLA					= (byte)0x00;
 	static final byte P1					= (byte)0x00;
 	static final byte P2					= (byte)0x00;
+	
+	static final String PATHTOFILES 		= "files\\";
+	static final short DATAMAXSIZE          = 20;
 
 	static final byte UPDATECARDKEY				= (byte)0x14;
 	static final byte UNCIPHERFILEBYCARD			= (byte)0x13;
@@ -162,8 +165,8 @@ public class TheClient {
 		String files= readKeyboard();
 		
 		String[] parts = files.split(" ");
-		String filename1 = parts[0];
-		String filename2 = parts[1];
+		String filename1 = PATHTOFILES+parts[0];
+		String filename2 = PATHTOFILES+parts[1];
 
 		try {
 			boolean flag = true;
@@ -173,10 +176,11 @@ public class TheClient {
 			int ch = 0;
 			
 			while ((ch = file1.read()) != -1 && flag ) {
+				
 				if (ch != file2.read()) {
 					flag = false;
 				}
-				System.out.println(flag);
+				System.out.println(ch);
 			}
 			if(file2.read() != -1) flag = false;
 
@@ -205,16 +209,53 @@ public class TheClient {
 
 
 	void cipherAndUncipherNameByCard() {
-		
 	}
 
 
 	void readFileFromCard() {
-
 	}
 
 
 	void writeFileToCard() {
+
+		byte[] filename= readKeyboard().getBytes();
+		int Lc = filename.length;
+		
+		File file = new File(PATHTOFILES+(new String(filename)));
+
+		byte[] header = {CLA,WRITEFILETOCARD,P1,P2,(byte)Lc};
+
+		try {
+			BufferedInputStream file1 = new BufferedInputStream(new FileInputStream(file));
+			int ch = 0;
+			int nbChunk=0;
+			byte[] chunk = new byte[10];
+
+			while (ch != -1 ) {
+				for(int i=0; i< DATAMAXSIZE ;i++){
+					ch = file1.read();
+					if(ch==-1){
+						chunk[i]=(byte)(DATAMAXSIZE-i);
+					} else
+						chunk[i]=(byte)ch;
+				}
+				nbChunk++;
+				// juste pour voir
+				System.out.println(ch);
+			}
+
+		} catch(IOException e){
+			System.out.println("Error with the files");
+		}
+
+
+		//byte[] data = name.getBytes();
+		byte[] command = new byte[Lc+5];
+		System.arraycopy(header,(short)0,command,(short)0,(short)5);
+		System.arraycopy(filename,(short)0,command,(short)5,(short)Lc);
+		//displayAPDU(buffer);
+		cmd = new CommandAPDU(command);
+		this.sendAPDU(cmd, DISPLAY);
 
 	}
 
@@ -336,7 +377,6 @@ public class TheClient {
 		switch( choice ) {
 			case 23: compareTwoFiles(); break;
 
-
 			case 14: updateCardKey(); break;
 			case 13: uncipherFileByCard(); break;
 			case 12: cipherFileByCard(); break;
@@ -419,6 +459,5 @@ public class TheClient {
 	public static void main( String[] args ) throws InterruptedException {
 		new TheClient();
 	}
-
 
 }

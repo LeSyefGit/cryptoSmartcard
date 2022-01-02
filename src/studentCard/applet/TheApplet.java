@@ -1,6 +1,8 @@
 package applet;
 
 
+import javax.swing.ButtonGroup;
+
 import javacard.framework.*;
 
 
@@ -29,7 +31,7 @@ public class TheApplet extends Applet {
 	// definir le tableua NVR au debut du programme;
 	final static short NVRSIZE      = (short)1024;
 	static byte[] NVR               = new byte[NVRSIZE];
-	static boolean pinsecurity = true;
+	static boolean pinsecurity  = false;   // #syef change it to true to activate pin security
 	static OwnerPIN writepin;
 	static OwnerPIN readpin;
 
@@ -105,18 +107,22 @@ public class TheApplet extends Applet {
 
 
 	void updateCardKey( APDU apdu ) {
+
 	}
 
 
 	void uncipherFileByCard( APDU apdu ) {
+
 	}
 
 
 	void cipherFileByCard( APDU apdu ) {
+
 	}
 
 
 	void cipherAndUncipherNameByCard( APDU apdu ) {
+		
 	}
 
 
@@ -126,7 +132,12 @@ public class TheApplet extends Applet {
 
 
 	void writeFileToCard( APDU apdu ) {
- 
+		
+		byte [] buffer = apdu.getBuffer();
+		
+		apdu.setIncomingAndReceive();
+		Util.arrayCopy(buffer,(short)4,NVR,(short)0,(short)(buffer[4]+1));
+		NVR[buffer[4]+2]=0;
 	}
 
 
