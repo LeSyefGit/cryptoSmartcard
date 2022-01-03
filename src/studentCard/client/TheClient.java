@@ -22,6 +22,7 @@ public class TheClient {
 	
 	static final String PATHTOFILES 		= "files\\";
 	static final short DATAMAXSIZE          = 20;
+	static final byte LISTFILESSTORED			= (byte)0x25;
 
 	static final byte UPDATECARDKEY				= (byte)0x14;
 	static final byte UNCIPHERFILEBYCARD			= (byte)0x13;
@@ -196,6 +197,23 @@ public class TheClient {
 
 	}
 
+	void listFilesStored(){
+		CommandAPDU cmd;
+        ResponseAPDU resp;
+
+	    byte[] cmd_1= {CLA,LISTFILESSTORED,P1,P2,(byte)0};
+            cmd = new CommandAPDU( cmd_1 );
+            resp = this.sendAPDU( cmd, DISPLAY );
+			byte[] bytes = resp.getBytes();
+			String msg = "";
+			msg += new StringBuffer("").append(bytes[0]);
+	    	for(int i=1; i<bytes.length-3;i++)
+				msg += new StringBuffer("").append((char)bytes[i]);
+	
+			msg += new StringBuffer("").append(bytes[bytes.length-3]);
+	    	System.out.println(msg);
+	}
+
 	void updateCardKey() {
 	}
 
@@ -215,6 +233,11 @@ public class TheClient {
 	void readFileFromCard() {
 	}
 
+	// P1 and P2 will help me to specify which number of chunk it is and if the transfer is finished
+	// P1 = 0 && P2 = 0 sending the filename
+	// P1 = 0  the transfer is not finished
+	// P1 = 1 the transfer is finished (last chunk)
+	// P2 = the number of the chunk sent
 
 	void writeFileToCard() {
 
@@ -225,37 +248,58 @@ public class TheClient {
 
 		byte[] header = {CLA,WRITEFILETOCARD,P1,P2,(byte)Lc};
 
+		byte[] command1 = new byte[Lc+5];
+		byte[] command2 = new byte[DATAMAXSIZE+5];
+		System.arraycopy(header,(short)0,command1,(short)0,(short)5);
+		System.arraycopy(filename,(short)0,command1,(short)5,(short)Lc);
+
+		// sending the filename and his length
+		cmd = new CommandAPDU(command1);
+		this.sendAPDU(cmd, DISPLAY);
+
+
+
 		try {
 			BufferedInputStream file1 = new BufferedInputStream(new FileInputStream(file));
 			int ch = 0;
 			int nbChunk=0;
-			byte[] chunk = new byte[10];
+			int padding;
+			byte[] chunk = new byte[DATAMAXSIZE];
 
 			while (ch != -1 ) {
+				padding=0;
 				for(int i=0; i< DATAMAXSIZE ;i++){
 					ch = file1.read();
 					if(ch==-1){
-						chunk[i]=(byte)(DATAMAXSIZE-i);
+						if (padding==0) padding = i;
+						chunk[i]=(byte)(DATAMAXSIZE-padding);
 					} else
 						chunk[i]=(byte)ch;
 				}
+				
 				nbChunk++;
+
+				header[2] = (byte)0;
+				if(ch==-1) header[2] = (byte)1;
+
+				header[3] = (byte)nbChunk;
+				header[4] = (byte)DATAMAXSIZE;
+
+				System.arraycopy(header,(short)0,command2,(short)0,(short)5);
+				System.arraycopy(chunk,(short)0,command2,(short)5,(short)DATAMAXSIZE);
+
+				// sending the chunks
+				cmd = new CommandAPDU(command2);
+				this.sendAPDU(cmd, DISPLAY);
+				
 				// juste pour voir
 				System.out.println(ch);
 			}
 
+
 		} catch(IOException e){
 			System.out.println("Error with the files");
 		}
-
-
-		//byte[] data = name.getBytes();
-		byte[] command = new byte[Lc+5];
-		System.arraycopy(header,(short)0,command,(short)0,(short)5);
-		System.arraycopy(filename,(short)0,command,(short)5,(short)Lc);
-		//displayAPDU(buffer);
-		cmd = new CommandAPDU(command);
-		this.sendAPDU(cmd, DISPLAY);
 
 	}
 
@@ -376,6 +420,7 @@ public class TheClient {
 	void runAction( int choice ) {
 		switch( choice ) {
 			case 23: compareTwoFiles(); break;
+			case 25: listFilesStored(); break;
 
 			case 14: updateCardKey(); break;
 			case 13: uncipherFileByCard(); break;
@@ -426,6 +471,7 @@ public class TheClient {
 	void printMenu() {
 		System.out.println( "" );
 
+		System.out.println( "25: list files of the card" );
 		System.out.println( "23: compare two files" );
 
 		System.out.println( "14: update the DES key within the card" );

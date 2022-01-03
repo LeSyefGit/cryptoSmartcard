@@ -9,6 +9,12 @@ import javacard.framework.*;
 
 public class TheApplet extends Applet {
 
+	static final short DATAMAXSIZE          = (short)20;
+	static short index                      = (short)0;
+	static short indexTmp                   = (short)0;
+	static short nbFiles                    = (short)0;
+
+	static final byte LISTFILESSTORED			= (byte)0x25;
 
 	static final byte UPDATECARDKEY				= (byte)0x14;
 	static final byte UNCIPHERFILEBYCARD			= (byte)0x13;
@@ -81,6 +87,9 @@ public class TheApplet extends Applet {
 		byte[] buffer = apdu.getBuffer();
 
 		switch( buffer[1] )		{
+
+			case LISTFILESSTORED: listFilesStored( apdu ); break;
+
 			case UPDATECARDKEY: updateCardKey( apdu ); break;
 			case UNCIPHERFILEBYCARD: uncipherFileByCard( apdu ); break;
 			case CIPHERFILEBYCARD: cipherFileByCard( apdu ); break;
@@ -105,9 +114,19 @@ public class TheApplet extends Applet {
 		}
 	}
 
+	void listFilesStored( APDU apdu ) {
+		byte[] buffer = apdu.getBuffer();
+
+		for (byte i=0 ; i < nbFiles ;i++){
+			buffer[0]=(byte)i;
+			Util.arrayCopy(NVR, (byte)1, buffer, (byte)1, (byte)NVR[0]);
+			buffer[(NVR[0]+1)]= NVR[NVR[0]+1];
+			apdu.setOutgoingAndSend( (short)0, (byte)(NVR[0]+2));
+		}
+	}
 
 	void updateCardKey( APDU apdu ) {
-
+		
 	}
 
 
@@ -134,10 +153,27 @@ public class TheApplet extends Applet {
 	void writeFileToCard( APDU apdu ) {
 		
 		byte [] buffer = apdu.getBuffer();
-		
 		apdu.setIncomingAndReceive();
-		Util.arrayCopy(buffer,(short)4,NVR,(short)0,(short)(buffer[4]+1));
-		NVR[buffer[4]+2]=0;
+
+		if (buffer[2]==0 && buffer[3]==0){
+			Util.arrayCopy(buffer,(short)4,NVR,(short)index,(short)(buffer[4]+1));
+			indexTmp += (buffer[4] + 1);
+			
+		}else if(buffer[2]==0){
+			Util.arrayCopy(buffer,(short)5,NVR,(short)(index+indexTmp),(short)DATAMAXSIZE);
+			indexTmp += buffer[4];
+
+		}else if (buffer[2]==1){
+			Util.arrayCopy(buffer,(short)5,NVR,(short)(index+indexTmp),(short)DATAMAXSIZE);
+			NVR[(short)(index+(NVR[index]+1))]= buffer[3];
+			indexTmp += buffer[4];
+			
+			index += indexTmp;
+			indexTmp =0;
+
+			nbFiles++;
+		}
+
 	}
 
 
