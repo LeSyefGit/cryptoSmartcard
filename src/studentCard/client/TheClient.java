@@ -197,21 +197,37 @@ public class TheClient {
 
 	}
 
+	// P1 and P2 will help me to specify when we are asking for the number of files and the number of the file asked for
+	// P1 = 0 && P2 = 0 asking for the number of files
+	// P1 = 1 asking for a specific file with the number specified in P2
+	// P2 = the number of the file
 	void listFilesStored(){
 		CommandAPDU cmd;
         ResponseAPDU resp;
-
+		
 	    byte[] cmd_1= {CLA,LISTFILESSTORED,P1,P2,(byte)0};
-            cmd = new CommandAPDU( cmd_1 );
-            resp = this.sendAPDU( cmd, DISPLAY );
-			byte[] bytes = resp.getBytes();
-			String msg = "";
+        cmd = new CommandAPDU( cmd_1 );
+        resp = this.sendAPDU( cmd, DISPLAY );
+		byte[] bytes = resp.getBytes();
+
+		byte nbfiles= bytes[0];
+		String msg = "";
+
+		for (int j=0; j< nbfiles;j++){
+			cmd_1[2]= (byte)1;
+			cmd_1[3]= (byte)j;
+			cmd = new CommandAPDU( cmd_1 );
+			System.out.println(cmd_1);
+			resp = this.sendAPDU( cmd, DISPLAY );
+			bytes = resp.getBytes();
+
+			msg = "";
 			msg += new StringBuffer("").append(bytes[0]);
-	    	for(int i=1; i<bytes.length-3;i++)
+			for(int i=1; i<bytes.length-3;i++)
 				msg += new StringBuffer("").append((char)bytes[i]);
-	
 			msg += new StringBuffer("").append(bytes[bytes.length-3]);
-	    	System.out.println(msg);
+			System.out.println(msg);
+		}	
 	}
 
 	void updateCardKey() {
@@ -231,6 +247,7 @@ public class TheClient {
 
 
 	void readFileFromCard() {
+
 	}
 
 	// P1 and P2 will help me to specify which number of chunk it is and if the transfer is finished

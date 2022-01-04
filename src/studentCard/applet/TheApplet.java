@@ -116,7 +116,38 @@ public class TheApplet extends Applet {
 
 	void listFilesStored( APDU apdu ) {
 		byte[] buffer = apdu.getBuffer();
+		apdu.setIncomingAndReceive();
 
+		
+
+		if (buffer[2]==0 && buffer[3]==0){
+			buffer[0]= (byte) nbFiles;
+			apdu.setOutgoingAndSend( (short)0, (byte)(1));
+
+		}
+		if(buffer[2]==(byte)1){
+			
+			buffer[0]= (byte) buffer[3];
+			buffer[(NVR[ getindex(buffer[3])]+1)]= NVR[NVR[ getindex(buffer[3]) ]+1];
+			Util.arrayCopy(NVR, (byte)(getindex(buffer[3])+1), buffer, (byte)1, (byte)NVR[getindex(buffer[3])] );
+			apdu.setOutgoingAndSend( (short)0, (byte)(10));
+		}
+	}
+
+	// get the index of the file by his number in the NVR Table
+	short getindex(byte filenumber){
+		short index=0;
+		for(byte i=0; i< filenumber ; i++ )
+			index += 2 + NVR[index] + NVR[(NVR[index]+1)] * DATAMAXSIZE ;
+
+		return index;
+	}
+
+/*
+	void listFilesStored( APDU apdu ) {
+		byte[] buffer = apdu.getBuffer();
+		buffer[0]=(byte)nbFiles;
+		
 		for (byte i=0 ; i < nbFiles ;i++){
 			buffer[0]=(byte)i;
 			Util.arrayCopy(NVR, (byte)1, buffer, (byte)1, (byte)NVR[0]);
@@ -124,6 +155,7 @@ public class TheApplet extends Applet {
 			apdu.setOutgoingAndSend( (short)0, (byte)(NVR[0]+2));
 		}
 	}
+*/
 
 	void updateCardKey( APDU apdu ) {
 		
