@@ -123,12 +123,12 @@ public class TheApplet extends Applet {
 		if (buffer[2]==0 && buffer[3]==0){
 			buffer[0]= (byte) nbFiles;
 			apdu.setOutgoingAndSend( (short)0, (byte)(1));
-
 		}
 		if(buffer[2]==(byte)1){
 			
 			buffer[0]= (byte) buffer[3];
 			buffer[(NVR[ getindex(buffer[3])]+1)]= NVR[NVR[ getindex(buffer[3]) ]+1];
+			//if (buffer[0]==(byte)1) buffer[1]= (byte) (NVR[ (byte) (getindex(buffer[3])-(byte)1) ]);
 			Util.arrayCopy(NVR, (byte)(getindex(buffer[3])+1), buffer, (byte)1, (byte)NVR[getindex(buffer[3])] );
 			apdu.setOutgoingAndSend( (short)0, (byte)(10));
 		}
@@ -189,7 +189,7 @@ public class TheApplet extends Applet {
 
 		if (buffer[2]==0 && buffer[3]==0){
 			Util.arrayCopy(buffer,(short)4,NVR,(short)index,(short)(buffer[4]+1));
-			indexTmp += (buffer[4] + 1);
+			indexTmp += (buffer[4] + 2);
 			
 		}else if(buffer[2]==0){
 			Util.arrayCopy(buffer,(short)5,NVR,(short)(index+indexTmp),(short)DATAMAXSIZE);
