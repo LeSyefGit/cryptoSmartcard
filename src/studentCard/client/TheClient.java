@@ -22,6 +22,8 @@ public class TheClient {
 	
 	static final String PATHTOFILES 		= "files\\";
 	static final short DATAMAXSIZE          = 20;
+
+	static final byte GETFILEBYNUMBER			= (byte)0x26;
 	static final byte LISTFILESSTORED			= (byte)0x25;
 
 	static final byte UPDATECARDKEY				= (byte)0x14;
@@ -195,6 +197,28 @@ public class TheClient {
 			System.out.println("Error with the files");
 		}
 
+	}
+
+	void getFileByNumber(){
+		int filenumber= Integer.parseInt( readKeyboard());
+
+		CommandAPDU cmd;
+        ResponseAPDU resp;
+		
+	    byte[] cmd_1= {CLA,LISTFILESSTORED,(byte)1,(byte)filenumber,(byte)0};
+        cmd = new CommandAPDU( cmd_1 );
+        resp = this.sendAPDU( cmd, DISPLAY );
+		byte[] bytes = resp.getBytes();
+
+		String msg = "";
+		msg += new StringBuffer("").append(bytes[0]);
+		for(int i=1; i<bytes.length-3;i++)
+			msg += new StringBuffer("").append((char)bytes[i]);
+		msg += new StringBuffer("").append(bytes[bytes.length-3]);
+		System.out.println(msg);
+
+		byte[] fileInfo= msg.getBytes();
+		
 	}
 
 	// P1 and P2 will help me to specify when we are asking for the number of files and the number of the file asked for
@@ -436,9 +460,11 @@ public class TheClient {
 
 	void runAction( int choice ) {
 		switch( choice ) {
-			case 23: compareTwoFiles(); break;
-			case 25: listFilesStored(); break;
 
+			case 26: getFileByNumber(); break;
+			case 25: listFilesStored(); break;
+			case 23: compareTwoFiles(); break;
+			
 			case 14: updateCardKey(); break;
 			case 13: uncipherFileByCard(); break;
 			case 12: cipherFileByCard(); break;
@@ -488,6 +514,7 @@ public class TheClient {
 	void printMenu() {
 		System.out.println( "" );
 
+		System.out.println( "26: get file by number" );
 		System.out.println( "25: list files of the card" );
 		System.out.println( "23: compare two files" );
 

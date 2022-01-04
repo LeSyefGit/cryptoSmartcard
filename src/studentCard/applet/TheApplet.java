@@ -14,6 +14,7 @@ public class TheApplet extends Applet {
 	static short indexTmp                   = (short)0;
 	static short nbFiles                    = (short)0;
 
+	static final byte GETFILEBYNUMBER			= (byte)0x26;
 	static final byte LISTFILESSTORED			= (byte)0x25;
 
 	static final byte UPDATECARDKEY				= (byte)0x14;
@@ -87,7 +88,7 @@ public class TheApplet extends Applet {
 		byte[] buffer = apdu.getBuffer();
 
 		switch( buffer[1] )		{
-
+			case GETFILEBYNUMBER: getFileByNumber(apdu ); break;
 			case LISTFILESSTORED: listFilesStored( apdu ); break;
 
 			case UPDATECARDKEY: updateCardKey( apdu ); break;
@@ -114,6 +115,27 @@ public class TheApplet extends Applet {
 		}
 	}
 
+	void getFileByNumber(APDU apdu){
+		byte[] buffer = apdu.getBuffer();
+		apdu.setIncomingAndReceive();
+
+		if (buffer[2]==(byte)1){
+			buffer[0]= (byte) buffer[3];
+			buffer[(NVR[ getindex(buffer[3])]+1)]= NVR[NVR[ getindex(buffer[3]) ]+1];
+			short val = (short) (NVR[getindex(buffer[3])]+2);
+			Util.arrayCopy(NVR, (byte)(getindex(buffer[3])+1), buffer, (byte)1, (byte)NVR[getindex(buffer[3])] );
+			apdu.setOutgoingAndSend( (short)0, val);
+		}
+
+		if(buffer[2]==(byte)2){
+			buffer[0]= (byte) buffer[3];
+			buffer[(NVR[ getindex(buffer[3])]+1)]= NVR[NVR[ getindex(buffer[3]) ]+1];
+			short val = (short) (NVR[getindex(buffer[3])]+2);
+			Util.arrayCopy(NVR, (byte)(getindex(buffer[3])+1), buffer, (byte)1, (byte)NVR[getindex(buffer[3])] );
+			apdu.setOutgoingAndSend( (short)0, val);
+		}
+	}
+
 	void listFilesStored( APDU apdu ) {
 		byte[] buffer = apdu.getBuffer();
 		apdu.setIncomingAndReceive();
@@ -128,9 +150,9 @@ public class TheApplet extends Applet {
 			
 			buffer[0]= (byte) buffer[3];
 			buffer[(NVR[ getindex(buffer[3])]+1)]= NVR[NVR[ getindex(buffer[3]) ]+1];
-			//if (buffer[0]==(byte)1) buffer[1]= (byte) (NVR[ (byte) (getindex(buffer[3])-(byte)1) ]);
+			short val = (short) (NVR[getindex(buffer[3])]+2);
 			Util.arrayCopy(NVR, (byte)(getindex(buffer[3])+1), buffer, (byte)1, (byte)NVR[getindex(buffer[3])] );
-			apdu.setOutgoingAndSend( (short)0, (byte)(10));
+			apdu.setOutgoingAndSend( (short)0, val);
 		}
 	}
 
