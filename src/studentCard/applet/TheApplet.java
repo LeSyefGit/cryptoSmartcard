@@ -13,6 +13,7 @@ public class TheApplet extends Applet {
 	static short index                      = (short)0;
 	static short indexTmp                   = (short)0;
 	static short nbFiles                    = (short)0;
+	static byte numFileReq                 = (byte)0;
 
 	static final byte GETFILEBYNUMBER			= (byte)0x26;
 	static final byte LISTFILESSTORED			= (byte)0x25;
@@ -120,6 +121,7 @@ public class TheApplet extends Applet {
 		apdu.setIncomingAndReceive();
 
 		if (buffer[2]==(byte)1){
+			numFileReq= (byte) buffer[3]; // num file requested
 			buffer[0]= (byte) buffer[3];
 			buffer[(NVR[ getindex(buffer[3])]+1)]= NVR[NVR[ getindex(buffer[3]) ]+1];
 			short val = (short) (NVR[getindex(buffer[3])]+2);
@@ -128,11 +130,9 @@ public class TheApplet extends Applet {
 		}
 
 		if(buffer[2]==(byte)2){
-			buffer[0]= (byte) buffer[3];
-			buffer[(NVR[ getindex(buffer[3])]+1)]= NVR[NVR[ getindex(buffer[3]) ]+1];
-			short val = (short) (NVR[getindex(buffer[3])]+2);
-			Util.arrayCopy(NVR, (byte)(getindex(buffer[3])+1), buffer, (byte)1, (byte)NVR[getindex(buffer[3])] );
-			apdu.setOutgoingAndSend( (short)0, val);
+			short val = (short)(getindex(numFileReq)  +(DATAMAXSIZE* buffer[3]) +(NVR[ getindex(numFileReq) ]+2) ) ; // index of data
+			Util.arrayCopy(NVR, val, buffer, (byte)0, (byte)DATAMAXSIZE );
+			apdu.setOutgoingAndSend( (short)0, (byte)DATAMAXSIZE);
 		}
 	}
 
@@ -164,20 +164,6 @@ public class TheApplet extends Applet {
 
 		return index;
 	}
-
-/*
-	void listFilesStored( APDU apdu ) {
-		byte[] buffer = apdu.getBuffer();
-		buffer[0]=(byte)nbFiles;
-		
-		for (byte i=0 ; i < nbFiles ;i++){
-			buffer[0]=(byte)i;
-			Util.arrayCopy(NVR, (byte)1, buffer, (byte)1, (byte)NVR[0]);
-			buffer[(NVR[0]+1)]= NVR[NVR[0]+1];
-			apdu.setOutgoingAndSend( (short)0, (byte)(NVR[0]+2));
-		}
-	}
-*/
 
 	void updateCardKey( APDU apdu ) {
 		

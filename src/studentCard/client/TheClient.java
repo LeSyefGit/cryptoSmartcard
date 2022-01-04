@@ -199,26 +199,74 @@ public class TheClient {
 
 	}
 
+
+	// P1 and P2 will help me to specify when we are asking for the number of files and the number of the file asked for
+	// P1 = 1 asking for files infos 
+	// P1 = 2 asking for a data of files
+	// P2 = the number of the trunk data asked
 	void getFileByNumber(){
 		int filenumber= Integer.parseInt( readKeyboard());
 
 		CommandAPDU cmd;
         ResponseAPDU resp;
 		
-	    byte[] cmd_1= {CLA,LISTFILESSTORED,(byte)1,(byte)filenumber,(byte)0};
+	    byte[] cmd_1= {CLA,GETFILEBYNUMBER,(byte)1,(byte)filenumber,(byte)0};
         cmd = new CommandAPDU( cmd_1 );
         resp = this.sendAPDU( cmd, DISPLAY );
 		byte[] bytes = resp.getBytes();
 
 		String msg = "";
 		msg += new StringBuffer("").append(bytes[0]);
+		msg += new StringBuffer("").append(" ");
 		for(int i=1; i<bytes.length-3;i++)
 			msg += new StringBuffer("").append((char)bytes[i]);
+		msg += new StringBuffer("").append(" ");
 		msg += new StringBuffer("").append(bytes[bytes.length-3]);
 		System.out.println(msg);
 
-		byte[] fileInfo= msg.getBytes();
+		String[] fileinfos = msg.split(" ");
+		try{
+			FileOutputStream out = new FileOutputStream(PATHTOFILES+"out-"+fileinfos[1]);
+			int nbTrunks = Integer.parseInt(fileinfos[2]);
+			
+			//trunks handling
+			byte[] trunk= new byte[DATAMAXSIZE] ;
+			short finTrunkLen = (short)0;
+			
+
+			for (int j=0; j< nbTrunks ;j++){ // trunk data number
+				cmd_1[2]= (byte)2;
+				cmd_1[3]= (byte)j;
+				cmd = new CommandAPDU( cmd_1 );
+				
+				resp = this.sendAPDU( cmd, DISPLAY );
+				bytes = resp.getBytes();
+				
+				if(j == nbTrunks-1){  // for the last trunk
+					finTrunkLen = (short)(DATAMAXSIZE - bytes[DATAMAXSIZE-1]);
+					byte[] finTrunk= new byte[finTrunkLen] ;
+					System.arraycopy(bytes,(short)0,finTrunk,(short)0,(short)finTrunkLen);
+					out.write(finTrunk);
+				}else{
+					System.arraycopy(bytes,(short)0,trunk,(short)0,(short)DATAMAXSIZE);
+					out.write(trunk);
+				}
+					
+				/*
+					msg="";
+					for(int i=0; i<bytes.length-2;i++)
+						msg += new StringBuffer("").append((char)bytes[i]);
+					
+					System.out.println(msg);
+				*/
+				
+			}
+			out.close();
+		}catch(IOException e){
+			System.out.println("Error with the output stream !!!!");
+		}
 		
+
 	}
 
 	// P1 and P2 will help me to specify when we are asking for the number of files and the number of the file asked for
@@ -241,14 +289,16 @@ public class TheClient {
 			cmd_1[2]= (byte)1;
 			cmd_1[3]= (byte)j;
 			cmd = new CommandAPDU( cmd_1 );
-			System.out.println(cmd_1);
+
 			resp = this.sendAPDU( cmd, DISPLAY );
 			bytes = resp.getBytes();
 
 			msg = "";
 			msg += new StringBuffer("").append(bytes[0]);
+			msg += new StringBuffer("").append(" ");
 			for(int i=1; i<bytes.length-3;i++)
 				msg += new StringBuffer("").append((char)bytes[i]);
+			msg += new StringBuffer("").append(" ");
 			msg += new StringBuffer("").append(bytes[bytes.length-3]);
 			System.out.println(msg);
 		}	
