@@ -29,16 +29,7 @@ public class TheClient {
 	static final byte UPDATECARDKEY				= (byte)0x14;
 	static final byte UNCIPHERFILEBYCARD			= (byte)0x13;
 	static final byte CIPHERFILEBYCARD			= (byte)0x12;
-	static final byte CIPHERANDUNCIPHERNAMEBYCARD		= (byte)0x11;
-	static final byte READFILEFROMCARD			= (byte)0x10;
 	static final byte WRITEFILETOCARD			= (byte)0x09;
-	static final byte UPDATEWRITEPIN			= (byte)0x08;
-	static final byte UPDATEREADPIN				= (byte)0x07;
-	static final byte DISPLAYPINSECURITY			= (byte)0x06;
-	static final byte DESACTIVATEACTIVATEPINSECURITY	= (byte)0x05;
-	static final byte ENTERREADPIN				= (byte)0x04;
-	static final byte ENTERWRITEPIN				= (byte)0x03;
-	static final byte READNAMEFROMCARD			= (byte)0x02;
 	static final byte WRITENAMETOCARD			= (byte)0x01;
 
 	ResponseAPDU resp;
@@ -89,7 +80,6 @@ public class TheClient {
 	/************************************************
 	 * *********** BEGINNING OF TOOLS ***************
 	 * **********************************************/
-
 
 	private String apdu2string( APDU apdu ) {
 		return removeCR( HexString.hexify( apdu.getBytes() ) );
@@ -251,14 +241,6 @@ public class TheClient {
 					System.arraycopy(bytes,(short)0,trunk,(short)0,(short)DATAMAXSIZE);
 					out.write(trunk);
 				}
-					
-				/*
-					msg="";
-					for(int i=0; i<bytes.length-2;i++)
-						msg += new StringBuffer("").append((char)bytes[i]);
-					
-					System.out.println(msg);
-				*/
 				
 			}
 			out.close();
@@ -304,24 +286,11 @@ public class TheClient {
 		}	
 	}
 
-	void updateCardKey() {
-	}
-
-
 	void uncipherFileByCard() {
 	}
 
 
 	void cipherFileByCard() {
-	}
-
-
-	void cipherAndUncipherNameByCard() {
-	}
-
-
-	void readFileFromCard() {
-
 	}
 
 	// P1 and P2 will help me to specify which number of chunk it is and if the transfer is finished
@@ -382,9 +351,6 @@ public class TheClient {
 				// sending the chunks
 				cmd = new CommandAPDU(command2);
 				this.sendAPDU(cmd, DISPLAY);
-				
-				// juste pour voir
-				System.out.println(ch);
 			}
 
 
@@ -393,115 +359,6 @@ public class TheClient {
 		}
 
 	}
-
-
-	void updateWritePIN() {
-		byte[] pin= readKeyboard().getBytes();
-		int Lc= pin.length;
-		byte[] header= {CLA,UPDATEWRITEPIN,P1,P2,(byte)Lc};
-		//byte[] data = name.getBytes();
-		byte[] command = new byte[Lc+5];
-		System.arraycopy(header,(short)0,command,(short)0,(short)5);
-		System.arraycopy(pin,(short)0,command,(short)5,(short)Lc);
-		//displayAPDU(buffer);
-		cmd = new CommandAPDU(command);
-		this.sendAPDU(cmd, DISPLAY);
-	}
-
-
-	void updateReadPIN() {
-		byte[] pin= readKeyboard().getBytes();
-		int Lc= pin.length;
-		byte[] header= {CLA,UPDATEREADPIN,P1,P2,(byte)Lc};
-		//byte[] data = name.getBytes();
-		byte[] command = new byte[Lc+5];
-		System.arraycopy(header,(short)0,command,(short)0,(short)5);
-		System.arraycopy(pin,(short)0,command,(short)5,(short)Lc);
-		//displayAPDU(buffer);
-		cmd = new CommandAPDU(command);
-		this.sendAPDU(cmd, DISPLAY);
-	}
-
-
-	void displayPINSecurity() {
-		byte[] cmd_1= {CLA,DISPLAYPINSECURITY,P1,P2,(byte)2};
-        cmd = new CommandAPDU( cmd_1 );
-        resp = this.sendAPDU( cmd, DISPLAY );
-		byte[] bytes = resp.getBytes();
-	    String msg = "";
-		if(bytes[0]==(byte)1 && bytes[1]==(byte)1)
-			System.out.println("Pin security is activated");
-		if(bytes[0]==(byte)0 && bytes[1]==(byte)0)
-			System.out.println("Pin security is desactivated");
-	}
-
-
-	void desactivateActivatePINSecurity() {
-		CommandAPDU cmd;
-        ResponseAPDU resp;
-
-	    byte[] cmd_1= {CLA,DESACTIVATEACTIVATEPINSECURITY,P1,P2}; 
-		cmd = new CommandAPDU( cmd_1 );
-        resp = this.sendAPDU( cmd, DISPLAY );
-	}
-
-
-	void enterReadPIN() {
-		byte[] pin= readKeyboard().getBytes();
-		int Lc= pin.length;
-		byte[] header= {CLA,ENTERREADPIN,P1,P2,(byte)Lc};
-		//byte[] data = name.getBytes();
-		byte[] command = new byte[Lc+5];
-		System.arraycopy(header,(short)0,command,(short)0,(short)5);
-		System.arraycopy(pin,(short)0,command,(short)5,(short)Lc);
-		//displayAPDU(buffer);
-		cmd = new CommandAPDU(command);
-		this.sendAPDU(cmd, DISPLAY);
-	}
-
-
-	void enterWritePIN() {
-		byte[] pin= readKeyboard().getBytes();
-		int Lc= pin.length;
-		byte[] header= {CLA,ENTERWRITEPIN,P1,P2,(byte)Lc};
-		//byte[] data = name.getBytes();
-		byte[] command = new byte[Lc+5];
-		System.arraycopy(header,(short)0,command,(short)0,(short)5);
-		System.arraycopy(pin,(short)0,command,(short)5,(short)Lc);
-		//displayAPDU(buffer);
-		cmd = new CommandAPDU(command);
-		this.sendAPDU(cmd, DISPLAY);
-	}
-
-
-	void readNameFromCard() {
-		CommandAPDU cmd;
-        ResponseAPDU resp;
-
-	    byte[] cmd_1= {CLA,READNAMEFROMCARD,P1,P2,(byte)0};
-            cmd = new CommandAPDU( cmd_1 );
-            resp = this.sendAPDU( cmd, DISPLAY );
-			byte[] bytes = resp.getBytes();
-	    	String msg = "";
-	    	for(int i=0; i<bytes.length-2;i++)
-		    	msg += new StringBuffer("").append((char)bytes[i]);
-	    	System.out.println(msg);
-	}
-
-
-	void writeNameToCard() {
-		byte[] name= readKeyboard().getBytes();
-		int Lc= name.length;
-		byte[] header= {CLA,WRITENAMETOCARD,P1,P2,(byte)Lc};
-		//byte[] data = name.getBytes();
-		byte[] command = new byte[Lc+5];
-		System.arraycopy(header,(short)0,command,(short)0,(short)5);
-		System.arraycopy(name,(short)0,command,(short)5,(short)Lc);
-		//displayAPDU(buffer);
-		cmd = new CommandAPDU(command);
-		this.sendAPDU(cmd, DISPLAY);
-	}
-
 
 	void exit() {
 		loop = false;
@@ -514,21 +371,9 @@ public class TheClient {
 			case 26: getFileByNumber(); break;
 			case 25: listFilesStored(); break;
 			case 23: compareTwoFiles(); break;
-			
-			case 14: updateCardKey(); break;
 			case 13: uncipherFileByCard(); break;
 			case 12: cipherFileByCard(); break;
-			case 11: cipherAndUncipherNameByCard(); break;
-			case 10: readFileFromCard(); break;
 			case 9: writeFileToCard(); break;
-			case 8: updateWritePIN(); break;
-			case 7: updateReadPIN(); break;
-			case 6: displayPINSecurity(); break;
-			case 5: desactivateActivatePINSecurity(); break;
-			case 4: enterReadPIN(); break;
-			case 3: enterWritePIN(); break;
-			case 2: readNameFromCard(); break;
-			case 1: writeNameToCard(); break;
 			case 0: exit(); break;
 			default: System.out.println( "unknown choice!" );
 		}
@@ -567,21 +412,10 @@ public class TheClient {
 		System.out.println( "26: get file by number" );
 		System.out.println( "25: list files of the card" );
 		System.out.println( "23: compare two files" );
-
 		System.out.println( "14: update the DES key within the card" );
 		System.out.println( "13: uncipher a file by the card" );
 		System.out.println( "12: cipher a file by the card" );
-		System.out.println( "11: cipher and uncipher a name by the card" );
-		System.out.println( "10: read a file from the card" );
 		System.out.println( "9: write a file to the card" );
-		System.out.println( "8: update WRITE_PIN" );
-		System.out.println( "7: update READ_PIN" );
-		System.out.println( "6: display PIN security status" );
-		System.out.println( "5: desactivate/activate PIN security" );
-		System.out.println( "4: enter READ_PIN" );
-		System.out.println( "3: enter WRITE_PIN" );
-		System.out.println( "2: read a name from the card" );
-		System.out.println( "1: write a name to the card" );
 		System.out.println( "0: exit" );
 		System.out.print( "--> " );
 	}
