@@ -21,7 +21,8 @@ public class TheClient {
 	static final byte P2					= (byte)0x00;
 	
 	static final String PATHTOFILES 		= "files\\";
-	static final short DATAMAXSIZE          = 20;
+	static final short DATAMAXSIZE          = 32;
+	static final short DATACRYPTOSIZE        = 32;
 
 	private final static byte INS_DES_ECB_NOPAD_ENC           	= (byte)0x20;
     private final static byte INS_DES_ECB_NOPAD_DEC           	= (byte)0x21;
@@ -289,10 +290,110 @@ public class TheClient {
 	}
 
 	void uncipherFileByCard() {
+		byte[] unciphered;
+
+		String filenames= readKeyboard();
+
+		String[] parts = filenames.split(" ");
+		String filename1 = PATHTOFILES+parts[0];
+		String filename2 = PATHTOFILES+parts[1];
+
+		
+		File file = new File(filename1);
+
+		try {
+			BufferedInputStream file1 = new BufferedInputStream(new FileInputStream(file));
+			FileOutputStream out = new FileOutputStream(filename2);
+
+			int ch = 0;
+			int nbChunk=0;
+			byte[] chunk = new byte[DATACRYPTOSIZE];
+
+			//trunks handling
+			short finTrunkLen = (short)0;
+
+			while (ch != -1 ) {
+				for(int i=0; i< DATACRYPTOSIZE ;i++){
+					ch = file1.read();
+					chunk[i]=(byte)ch;
+				}
+				nbChunk++;
+				unciphered = cipherGeneric(INS_DES_ECB_NOPAD_DEC, chunk);
+
+				for (int i=0 ; i < unciphered.length;  i++){
+					System.out.print(unciphered[i] +" ");
+				}
+				System.out.print("\r\n");
+
+				if(ch == -1){  // for the last trunk
+					finTrunkLen = (short)(DATACRYPTOSIZE - (short)unciphered[DATACRYPTOSIZE-1]);
+					System.out.println("lskdjf "+ DATACRYPTOSIZE);
+					byte[] finTrunk= new byte[finTrunkLen] ;
+					System.arraycopy(unciphered,(short)0,finTrunk,(short)0,(short)finTrunkLen);
+					out.write(finTrunk);
+				}else{
+					out.write(unciphered);
+				}
+
+			}
+
+			out.close();
+			file1.close();
+
+		} catch(IOException e){
+			System.out.println("Error with the files");
+		}
 	}
 
 
-	void cipherFileByCard() {
+	void cipherFileByCard() {	 
+		byte[] response;
+
+		String filenames= readKeyboard();
+
+		String[] parts = filenames.split(" ");
+		String filename1 = PATHTOFILES+parts[0];
+		String filename2 = PATHTOFILES+parts[1];
+
+		
+		File file = new File(filename1);
+
+		try {
+			BufferedInputStream file1 = new BufferedInputStream(new FileInputStream(file));
+			FileOutputStream out = new FileOutputStream(filename2);
+
+			int ch = 0;
+			int nbChunk=0;
+			int padding;
+			byte[] chunk = new byte[DATACRYPTOSIZE];
+
+			while (ch != -1 ) {
+				padding=0;
+				for(int i=0; i< DATACRYPTOSIZE ;i++){
+					ch = file1.read();
+					if(ch==-1){
+						if (padding==0) padding = i;
+						chunk[i]=(byte)(DATACRYPTOSIZE-padding);
+					} else
+						chunk[i]=(byte)ch;
+				}
+				nbChunk++;
+				response = cipherGeneric(INS_DES_ECB_NOPAD_ENC, chunk);
+
+				for (int i=0 ; i < response.length;  i++){
+					System.out.print(response[i] +" ");
+				}
+				System.out.print("\r\n");
+				out.write(response);
+
+			}
+
+			out.close();
+			file1.close();
+
+		} catch(IOException e){
+			System.out.println("Error with the files");
+		}
 	}
 
 	private byte[] cipherGeneric( byte typeINS, byte[] challenge ) {
@@ -305,9 +406,6 @@ public class TheClient {
 		command[Lc+5]=(byte)Lc;
 		CommandAPDU cmd = new CommandAPDU(command);
 
-
-
-
 		ResponseAPDU resp;
 
 		resp = this.sendAPDU( cmd, DISPLAY );
@@ -316,34 +414,6 @@ public class TheClient {
 		
 		System.arraycopy(result1,(short)0,result,(short)0,(short)(result1.length-2));
 	    return result;
-    }
-
-	private byte[] cipherDES_ECB_NOPAD( byte[] challenge, boolean display ) {
-	    return cipherGeneric( INS_DES_ECB_NOPAD_ENC, challenge );
-    } 
-    
-    
-    private byte[] uncipherDES_ECB_NOPAD( byte[] challenge, boolean display ) {
-	    return cipherGeneric( INS_DES_ECB_NOPAD_DEC, challenge );
-    } 
-
-	private void foo() {
-	    sun.misc.BASE64Encoder encoder = new sun.misc.BASE64Encoder();
-	    byte[] response;
-	    byte[] unciphered; 
-	    long d1, d2, seed=0;
-	    java.util.Random r = new java.util.Random( seed );
-
-	    byte[] challengeDES = new byte[16]; 		// size%8==0, coz DES key 64bits
-		
-		r.nextBytes( challengeDES );
-		
-	    System.out.println( "**TESTING**");
-	    System.out.println("\nchallenge:\n" + encoder.encode(challengeDES) + "\n");
-	    response = cipherGeneric(INS_DES_ECB_NOPAD_ENC, challengeDES);
-	    System.out.println("\nciphered is:\n" + encoder.encode(response) + "\n");
-	    unciphered = cipherGeneric(INS_DES_ECB_NOPAD_DEC, response);
-	    System.out.print("\nunciphered is:\n" + encoder.encode(unciphered) + "\n");
     }
 
 	// P1 and P2 will help me to specify which number of chunk it is and if the transfer is finished
@@ -427,7 +497,6 @@ public class TheClient {
 			case 13: uncipherFileByCard(); break;
 			case 12: cipherFileByCard(); break;
 			case 9: writeFileToCard(); break;
-			case 20: foo(); break;
 			case 0: exit(); break;
 			default: System.out.println( "unknown choice!" );
 		}

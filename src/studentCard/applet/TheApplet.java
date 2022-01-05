@@ -10,7 +10,7 @@ import javacardx.crypto.*;
 
 public class TheApplet extends Applet {
 
-	static final short DATAMAXSIZE          = (short)20;
+	static final short DATAMAXSIZE          = (short)32;
 	static short index                      = (short)0;
 	static short indexTmp                   = (short)0;
 	static short nbFiles                    = (short)0;

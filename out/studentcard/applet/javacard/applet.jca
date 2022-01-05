@@ -1,5 +1,5 @@
 // converted by version 1.3
-// on Wed Jan 05 01:54:34 CET 2022
+// on Wed Jan 05 04:23:05 CET 2022
 
 .package applet {
 	.aid 0xA0:0x0:0x0:0x0:0x62:0x3:0x1:0xC:0x6;
@@ -140,7 +140,7 @@
 			 boolean keyDES 12;		// Z
 			 boolean DES_ECB_NOPAD 13;		// Z
 			 boolean DES_CBC_NOPAD 14;		// Z
-			static final short DATAMAXSIZE = 20;		// S
+			static final short DATAMAXSIZE = 32;		// S
 			static short index;		// S
 			static short indexTmp;		// S
 			static short nbFiles;		// S
@@ -573,7 +573,7 @@
 				L3:	aload_0;
 					getstatic_b 35;		// byte applet/TheApplet.numFileReq
 					invokevirtual 37;		// applet/TheApplet.getindex(B)S
-					bspush 20;
+					bspush 32;
 					aload_2;
 					sconst_3;
 					baload;
@@ -592,12 +592,12 @@
 					sload_3;
 					aload_2;
 					sconst_0;
-					bspush 20;
+					bspush 32;
 					invokestatic 38;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_1;
 					sconst_0;
-					bspush 20;
+					bspush 32;
 					invokevirtual 39;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
 				L4:	return;
 		}
@@ -725,7 +725,7 @@
 					sconst_1;
 					sadd;
 					baload;
-					bspush 20;
+					bspush 32;
 					smul;
 					sadd;
 					sadd;
@@ -840,7 +840,7 @@
 					getstatic_s 42;		// short applet/TheApplet.index
 					getstatic_s 43;		// short applet/TheApplet.indexTmp
 					sadd;
-					bspush 20;
+					bspush 32;
 					invokestatic 38;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					getstatic_s 43;		// short applet/TheApplet.indexTmp
@@ -861,7 +861,7 @@
 					getstatic_s 42;		// short applet/TheApplet.index
 					getstatic_s 43;		// short applet/TheApplet.indexTmp
 					sadd;
-					bspush 20;
+					bspush 32;
 					invokestatic 38;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					getstatic_a 36;		// reference applet/TheApplet.NVR
