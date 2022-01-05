@@ -4,7 +4,8 @@ package applet;
 import javax.swing.ButtonGroup;
 
 import javacard.framework.*;
-
+import javacard.security.*;
+import javacardx.crypto.*;
 
 
 public class TheApplet extends Applet {
@@ -17,7 +18,10 @@ public class TheApplet extends Applet {
 
 	static final byte GETFILEBYNUMBER			= (byte)0x26;
 	static final byte LISTFILESSTORED			= (byte)0x25;
-	
+
+	private final static byte INS_DES_ECB_NOPAD_ENC           	= (byte)0x20;
+    private final static byte INS_DES_ECB_NOPAD_DEC           	= (byte)0x21;
+
 	static final byte UNCIPHERFILEBYCARD			= (byte)0x13;
 	static final byte CIPHERFILEBYCARD			= (byte)0x12;
 	static final byte WRITEFILETOCARD			= (byte)0x09;
@@ -25,6 +29,9 @@ public class TheApplet extends Applet {
 	// consts added
 	final static short  SW_VERIFICATION_FAILED = (short) 0x6300;
 	final static short  SW_PIN_VERIFICATION_REQUIRED = (short) 0x6301;
+
+	static final byte[] theDESKey = 
+		new byte[] { (byte)0xCA, (byte)0xCA, (byte)0xCA, (byte)0xCA, (byte)0xCA, (byte)0xCA, (byte)0xCA, (byte)0xCA };
 	// definir le tableua NVR au debut du programme;
 	final static short NVRSIZE      = (short)1024;
 	static byte[] NVR               = new byte[NVRSIZE];
@@ -32,7 +39,28 @@ public class TheApplet extends Applet {
 	static OwnerPIN writepin;
 	static OwnerPIN readpin;
 
+	// cipher instances
+    private Cipher 
+	    cDES_ECB_NOPAD_enc, cDES_ECB_NOPAD_dec;
+
+
+    // key objects
+			
+    private Key 
+	    secretDESKey, secretDES2Key, secretDES3Key;
+
+	boolean 
+		pseudoRandom, secureRandom,
+	    SHA1, MD5, RIPEMD160,
+	    keyDES, DES_ECB_NOPAD, DES_CBC_NOPAD;
+
+	private byte[] dataToCipher = {1,2,3,4,5,6,7,8};
+	private byte[] ciphered = new byte[8];
+
 	protected TheApplet() {
+		initKeyDES(); 
+	    initDES_ECB_NOPAD();
+
 		byte[] readpincode = 
 		{(byte)0x30,(byte)0x30,(byte)0x30,(byte)0x30}; // PIN code "0000"
 		byte[] writepincode = {(byte)0x31,(byte)0x31,(byte)0x31,(byte)0x31}; // PIN code "1111"
@@ -43,6 +71,30 @@ public class TheApplet extends Applet {
 
 		this.register();
 	}
+
+	private void initKeyDES() {
+	    try {
+		    secretDESKey = KeyBuilder.buildKey(KeyBuilder.TYPE_DES, KeyBuilder.LENGTH_DES, false);
+		    ((DESKey)secretDESKey).setKey(theDESKey,(short)0);
+		    keyDES = true;
+	    } catch( Exception e ) {
+		    keyDES = false;
+	    }
+    }
+
+
+    private void initDES_ECB_NOPAD() {
+	    if( keyDES ) try {
+		    cDES_ECB_NOPAD_enc = Cipher.getInstance(Cipher.ALG_DES_ECB_NOPAD, false);
+		    cDES_ECB_NOPAD_dec = Cipher.getInstance(Cipher.ALG_DES_ECB_NOPAD, false);
+		    cDES_ECB_NOPAD_enc.init( secretDESKey, Cipher.MODE_ENCRYPT );
+		    cDES_ECB_NOPAD_dec.init( secretDESKey, Cipher.MODE_DECRYPT );
+		    DES_ECB_NOPAD = true;
+	    } catch( Exception e ) {
+		    DES_ECB_NOPAD = false;
+	    }
+    }
+
 
 
 	public static void install(byte[] bArray, short bOffset, byte bLength) throws ISOException {
@@ -80,8 +132,14 @@ public class TheApplet extends Applet {
 		switch( buffer[1] )		{
 			case GETFILEBYNUMBER: getFileByNumber(apdu ); break;
 			case LISTFILESSTORED: listFilesStored( apdu ); break;
-			case UNCIPHERFILEBYCARD: uncipherFileByCard( apdu ); break;
-			case CIPHERFILEBYCARD: cipherFileByCard( apdu ); break;
+			//case UNCIPHERFILEBYCARD: uncipherFileByCard( apdu ); break;
+			//case CIPHERFILEBYCARD: cipherFileByCard( apdu ); break;
+
+			case INS_DES_ECB_NOPAD_ENC: if( DES_ECB_NOPAD )
+                cipherGeneric( apdu, cDES_ECB_NOPAD_enc, KeyBuilder.LENGTH_DES ); break;//chiffrer  les données venant du pc
+            case INS_DES_ECB_NOPAD_DEC: if( DES_ECB_NOPAD ) 
+				cipherGeneric( apdu, cDES_ECB_NOPAD_dec, KeyBuilder.LENGTH_DES  ); break;
+				
 			case WRITEFILETOCARD: writeFileToCard( apdu ); break;
 			default: ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
 		}
@@ -135,6 +193,20 @@ public class TheApplet extends Applet {
 
 		return index;
 	}
+
+	private void cipherGeneric( APDU apdu, Cipher cipher, short keyLength ) {
+        byte[] buffer = apdu.getBuffer();
+        
+        apdu.setIncomingAndReceive();
+
+		cipher.doFinal( buffer, (short)5, (short)buffer[4], buffer, (short)5);
+        
+        apdu.setOutgoingAndSend( (short)5, (short)buffer[4]);
+
+		// Write the method ciphering/unciphering data from the computer.
+		// The result is sent back to the computer.
+	}
+
 
 	void uncipherFileByCard( APDU apdu ) {
 

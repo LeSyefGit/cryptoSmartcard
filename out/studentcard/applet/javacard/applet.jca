@@ -1,5 +1,5 @@
 // converted by version 1.3
-// on Tue Jan 04 23:48:15 CET 2022
+// on Wed Jan 05 01:54:34 CET 2022
 
 .package applet {
 	.aid 0xA0:0x0:0x0:0x0:0x62:0x3:0x1:0xC:0x6;
@@ -7,6 +7,9 @@
 
 	.imports {
 		0xA0:0x0:0x0:0x0:0x62:0x1:0x1 1.0;		//javacard/framework
+		0xA0:0x0:0x0:0x0:0x62:0x2:0x1 1.1;		//javacardx/crypto
+		0xA0:0x0:0x0:0x0:0x62:0x1:0x2 1.1;		//javacard/security
+		0xA0:0x0:0x0:0x0:0x62:0x0:0x1 1.0;		//java/lang
 	}
 
 	.applet {
@@ -15,131 +18,128 @@
 
 	.constantPool {
 		// 0
-		staticMethodRef 0.3.0()V;		// javacard/framework/Applet.<init>()V
+		instanceFieldRef byte[] TheApplet/dataToCipher;
 		// 1
-		classRef 0.9;		// javacard/framework/OwnerPIN
+		instanceFieldRef byte[] TheApplet/ciphered;
 		// 2
-		staticMethodRef 0.9.0(BB)V;		// javacard/framework/OwnerPIN.<init>(BB)V
+		instanceFieldRef 2.0 TheApplet/secretDESKey;
 		// 3
-		staticFieldRef 0.9 TheApplet/readpin;
+		instanceFieldRef boolean TheApplet/keyDES;
 		// 4
-		virtualMethodRef 0.9.8([BSB)V;		// javacard/framework/OwnerPIN.update([BSB)V
+		instanceFieldRef 1.1 TheApplet/cDES_ECB_NOPAD_enc;
 		// 5
-		staticFieldRef 0.9 TheApplet/writepin;
+		instanceFieldRef 1.1 TheApplet/cDES_ECB_NOPAD_dec;
 		// 6
-		virtualMethodRef 0.3.1()V;		// javacard/framework/Applet.register()V
+		instanceFieldRef boolean TheApplet/DES_ECB_NOPAD;
 		// 7
-		classRef TheApplet;
+		staticFieldRef 0.9 TheApplet/readpin;
 		// 8
-		staticMethodRef TheApplet/<init>()V;
+		virtualMethodRef 0.9.8([BSB)V;		// javacard/framework/OwnerPIN.update([BSB)V
 		// 9
-		virtualMethodRef 0.9.2()B;		// javacard/framework/OwnerPIN.getTriesRemaining()B
+		staticFieldRef 0.9 TheApplet/writepin;
 		// 10
-		virtualMethodRef 0.9.5()V;		// javacard/framework/OwnerPIN.reset()V
+		virtualMethodRef 0.3.1()V;		// javacard/framework/Applet.register()V
 		// 11
-		virtualMethodRef 0.10.6()S;		// javacard/framework/APDU.setIncomingAndReceive()S
+		classRef 3.2;		// java/lang/Exception
 		// 12
-		virtualMethodRef 0.10.1()[B;		// javacard/framework/APDU.getBuffer()[B
+		staticMethodRef 2.13.0(BSZ)Ljavacard/security/Key;;		// javacard/security/KeyBuilder.buildKey(BSZ)Ljavacard/security/Key;
+			.descriptor	Ljavacard/security/Key;	2.0;
+
 		// 13
-		virtualMethodRef 0.9.1([BSB)Z;		// javacard/framework/OwnerPIN.check([BSB)Z
+		staticMethodRef 0.3.0()V;		// javacard/framework/Applet.<init>()V
 		// 14
-		staticMethodRef 0.7.1(S)V;		// javacard/framework/ISOException.throwIt(S)V
+		classRef 2.10;		// javacard/security/DESKey
 		// 15
-		virtualMethodRef 0.3.3()Z;		// javacard/framework/Applet.selectingApplet()Z
+		staticFieldRef byte[] TheApplet/theDESKey;
 		// 16
+		staticMethodRef TheApplet/initKeyDES()V;
+		// 17
+		staticMethodRef 1.1.0(BZ)Ljavacardx/crypto/Cipher;;		// javacardx/crypto/Cipher.getInstance(BZ)Ljavacardx/crypto/Cipher;
+			.descriptor	Ljavacardx/crypto/Cipher;	1.1;
+
+		// 18
+		staticMethodRef TheApplet/initDES_ECB_NOPAD()V;
+		// 19
+		classRef 0.9;		// javacard/framework/OwnerPIN
+		// 20
+		virtualMethodRef 1.1.3(Ljavacard/security/Key;B)V;		// javacardx/crypto/Cipher.init(Ljavacard/security/Key;B)V
+			.descriptor	Ljavacard/security/Key;	2.0;
+
+		// 21
+		staticMethodRef 0.9.0(BB)V;		// javacard/framework/OwnerPIN.<init>(BB)V
+		// 22
+		classRef TheApplet;
+		// 23
+		staticMethodRef TheApplet/<init>()V;
+		// 24
+		virtualMethodRef 0.9.2()B;		// javacard/framework/OwnerPIN.getTriesRemaining()B
+		// 25
+		virtualMethodRef 0.9.5()V;		// javacard/framework/OwnerPIN.reset()V
+		// 26
+		virtualMethodRef 0.10.6()S;		// javacard/framework/APDU.setIncomingAndReceive()S
+		// 27
+		virtualMethodRef 0.10.1()[B;		// javacard/framework/APDU.getBuffer()[B
+		// 28
+		virtualMethodRef 0.9.1([BSB)Z;		// javacard/framework/OwnerPIN.check([BSB)Z
+		// 29
+		staticMethodRef 0.7.1(S)V;		// javacard/framework/ISOException.throwIt(S)V
+		// 30
+		virtualMethodRef 0.3.3()Z;		// javacard/framework/Applet.selectingApplet()Z
+		// 31
 		virtualMethodRef TheApplet/getFileByNumber(Ljavacard/framework/APDU;)V;
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
-		// 17
+		// 32
 		virtualMethodRef TheApplet/listFilesStored(Ljavacard/framework/APDU;)V;
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
-		// 18
-		virtualMethodRef TheApplet/updateCardKey(Ljavacard/framework/APDU;)V;
+		// 33
+		staticMethodRef TheApplet/cipherGeneric(Ljavacard/framework/APDU;Ljavacardx/crypto/Cipher;S)V;
 			.descriptor	Ljavacard/framework/APDU;	0.10;
+			.descriptor	Ljavacardx/crypto/Cipher;	1.1;
 
-		// 19
-		virtualMethodRef TheApplet/uncipherFileByCard(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 20
-		virtualMethodRef TheApplet/cipherFileByCard(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 21
-		virtualMethodRef TheApplet/cipherAndUncipherNameByCard(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 22
-		virtualMethodRef TheApplet/readFileFromCard(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 23
+		// 34
 		virtualMethodRef TheApplet/writeFileToCard(Ljavacard/framework/APDU;)V;
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
-		// 24
-		virtualMethodRef TheApplet/updateWritePIN(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 25
-		virtualMethodRef TheApplet/updateReadPIN(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 26
-		virtualMethodRef TheApplet/displayPINSecurity(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 27
-		virtualMethodRef TheApplet/desactivateActivatePINSecurity(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 28
-		virtualMethodRef TheApplet/enterReadPIN(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 29
-		virtualMethodRef TheApplet/enterWritePIN(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 30
-		staticFieldRef boolean TheApplet/pinsecurity;
-		// 31
-		virtualMethodRef 0.9.4()Z;		// javacard/framework/OwnerPIN.isValidated()Z
-		// 32
-		virtualMethodRef TheApplet/readNameFromCard(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 33
-		virtualMethodRef TheApplet/writeNameToCard(Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-		// 34
-		staticFieldRef byte TheApplet/numFileReq;
 		// 35
-		staticFieldRef byte[] TheApplet/NVR;
+		staticFieldRef byte TheApplet/numFileReq;
 		// 36
-		virtualMethodRef TheApplet/getindex(B)S;
+		staticFieldRef byte[] TheApplet/NVR;
 		// 37
-		staticMethodRef 0.16.1([BS[BSS)S;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+		virtualMethodRef TheApplet/getindex(B)S;
 		// 38
-		virtualMethodRef 0.10.8(SS)V;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
+		staticMethodRef 0.16.1([BS[BSS)S;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 		// 39
-		staticFieldRef short TheApplet/nbFiles;
+		virtualMethodRef 0.10.8(SS)V;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
 		// 40
-		staticFieldRef short TheApplet/index;
+		staticFieldRef short TheApplet/nbFiles;
 		// 41
-		staticFieldRef short TheApplet/indexTmp;
+		virtualMethodRef 1.1.1([BSS[BS)S;		// javacardx/crypto/Cipher.doFinal([BSS[BS)S
 		// 42
-		virtualMethodRef TheApplet/verify(Ljavacard/framework/OwnerPIN;Ljavacard/framework/APDU;)V;
-			.descriptor	Ljavacard/framework/OwnerPIN;	0.9;
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
+		staticFieldRef short TheApplet/index;
+		// 43
+		staticFieldRef short TheApplet/indexTmp;
 	}
 
 	.class public TheApplet 0 extends 0.3 {		// extends javacard/framework/Applet
 
 		.fields {
+			private 1.1 cDES_ECB_NOPAD_enc 0;		// Ljavacardx/crypto/Cipher;
+			private 1.1 cDES_ECB_NOPAD_dec 1;		// Ljavacardx/crypto/Cipher;
+			private 2.0 secretDESKey 2;		// Ljavacard/security/Key;
+			private 2.0 secretDES2Key 3;		// Ljavacard/security/Key;
+			private 2.0 secretDES3Key 4;		// Ljavacard/security/Key;
+			private byte[] dataToCipher 5;		// [B
+			private byte[] ciphered 6;		// [B
+			 boolean pseudoRandom 7;		// Z
+			 boolean secureRandom 8;		// Z
+			 boolean SHA1 9;		// Z
+			 boolean MD5 10;		// Z
+			 boolean RIPEMD160 11;		// Z
+			 boolean keyDES 12;		// Z
+			 boolean DES_ECB_NOPAD 13;		// Z
+			 boolean DES_CBC_NOPAD 14;		// Z
 			static final short DATAMAXSIZE = 20;		// S
 			static short index;		// S
 			static short indexTmp;		// S
@@ -147,22 +147,14 @@
 			static byte numFileReq;		// B
 			static final byte GETFILEBYNUMBER = 38;		// B
 			static final byte LISTFILESSTORED = 37;		// B
-			static final byte UPDATECARDKEY = 20;		// B
+			private static final byte INS_DES_ECB_NOPAD_ENC = 32;		// B
+			private static final byte INS_DES_ECB_NOPAD_DEC = 33;		// B
 			static final byte UNCIPHERFILEBYCARD = 19;		// B
 			static final byte CIPHERFILEBYCARD = 18;		// B
-			static final byte CIPHERANDUNCIPHERNAMEBYCARD = 17;		// B
-			static final byte READFILEFROMCARD = 16;		// B
 			static final byte WRITEFILETOCARD = 9;		// B
-			static final byte UPDATEWRITEPIN = 8;		// B
-			static final byte UPDATEREADPIN = 7;		// B
-			static final byte DISPLAYPINSECURITY = 6;		// B
-			static final byte DESACTIVATEACTIVATEPINSECURITY = 5;		// B
-			static final byte ENTERREADPIN = 4;		// B
-			static final byte ENTERWRITEPIN = 3;		// B
-			static final byte READNAMEFROMCARD = 2;		// B
-			static final byte WRITENAMETOCARD = 1;		// B
 			static final short SW_VERIFICATION_FAILED = 25344;		// S
 			static final short SW_PIN_VERIFICATION_REQUIRED = 25345;		// S
+			static final byte[] theDESKey = {-54,-54,-54,-54,-54,-54,-54,-54};		// [B
 			static final short NVRSIZE = 1024;		// S
 			static byte[] NVR = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};		// [B
 			static boolean pinsecurity;		// Z
@@ -186,28 +178,61 @@
 			getFileByNumber(Ljavacard/framework/APDU;)V;
 			listFilesStored(Ljavacard/framework/APDU;)V;
 			getindex(B)S;
-			updateCardKey(Ljavacard/framework/APDU;)V;
 			uncipherFileByCard(Ljavacard/framework/APDU;)V;
 			cipherFileByCard(Ljavacard/framework/APDU;)V;
-			cipherAndUncipherNameByCard(Ljavacard/framework/APDU;)V;
-			readFileFromCard(Ljavacard/framework/APDU;)V;
 			writeFileToCard(Ljavacard/framework/APDU;)V;
-			updateWritePIN(Ljavacard/framework/APDU;)V;
-			updateReadPIN(Ljavacard/framework/APDU;)V;
-			displayPINSecurity(Ljavacard/framework/APDU;)V;
-			desactivateActivatePINSecurity(Ljavacard/framework/APDU;)V;
-			enterReadPIN(Ljavacard/framework/APDU;)V;
-			enterWritePIN(Ljavacard/framework/APDU;)V;
-			readNameFromCard(Ljavacard/framework/APDU;)V;
-			writeNameToCard(Ljavacard/framework/APDU;)V;
 		}
 
 		.method protected <init>()V 0 {
-			.stack 4;
+			.stack 5;
 			.locals 2;
 
 				L0:	aload_0;
-					invokespecial 0;		// javacard/framework/Applet.<init>()V
+					invokespecial 13;		// javacard/framework/Applet.<init>()V
+					aload_0;
+					bspush 8;
+					newarray 11;
+					dup;
+					sconst_0;
+					sconst_1;
+					bastore;
+					dup;
+					sconst_1;
+					sconst_2;
+					bastore;
+					dup;
+					sconst_2;
+					sconst_3;
+					bastore;
+					dup;
+					sconst_3;
+					sconst_4;
+					bastore;
+					dup;
+					sconst_4;
+					sconst_5;
+					bastore;
+					dup;
+					sconst_5;
+					bspush 6;
+					bastore;
+					dup;
+					bspush 6;
+					bspush 7;
+					bastore;
+					dup;
+					bspush 7;
+					bspush 8;
+					bastore;
+					putfield_a 0;		// reference applet/TheApplet.dataToCipher
+					aload_0;
+					bspush 8;
+					newarray 11;
+					putfield_a 1;		// reference applet/TheApplet.ciphered
+					aload_0;
+					invokespecial 16;		// applet/TheApplet.initKeyDES()V
+					aload_0;
+					invokespecial 18;		// applet/TheApplet.initDES_ECB_NOPAD()V
 					sconst_4;
 					newarray 11;
 					dup;
@@ -246,40 +271,109 @@
 					bspush 49;
 					bastore;
 					astore_2;
-					new 1;		// javacard/framework/OwnerPIN
+					new 19;		// javacard/framework/OwnerPIN
 					dup;
 					sconst_3;
 					bspush 8;
-					invokespecial 2;		// javacard/framework/OwnerPIN.<init>(BB)V
-					putstatic_a 3;		// reference applet/TheApplet.readpin
-					getstatic_a 3;		// reference applet/TheApplet.readpin
+					invokespecial 21;		// javacard/framework/OwnerPIN.<init>(BB)V
+					putstatic_a 7;		// reference applet/TheApplet.readpin
+					getstatic_a 7;		// reference applet/TheApplet.readpin
 					aload_1;
 					sconst_0;
 					sconst_4;
-					invokevirtual 4;		// javacard/framework/OwnerPIN.update([BSB)V
-					new 1;		// javacard/framework/OwnerPIN
+					invokevirtual 8;		// javacard/framework/OwnerPIN.update([BSB)V
+					new 19;		// javacard/framework/OwnerPIN
 					dup;
 					sconst_3;
 					bspush 8;
-					invokespecial 2;		// javacard/framework/OwnerPIN.<init>(BB)V
-					putstatic_a 5;		// reference applet/TheApplet.writepin
-					getstatic_a 5;		// reference applet/TheApplet.writepin
+					invokespecial 21;		// javacard/framework/OwnerPIN.<init>(BB)V
+					putstatic_a 9;		// reference applet/TheApplet.writepin
+					getstatic_a 9;		// reference applet/TheApplet.writepin
 					aload_2;
 					sconst_0;
 					sconst_4;
-					invokevirtual 4;		// javacard/framework/OwnerPIN.update([BSB)V
+					invokevirtual 8;		// javacard/framework/OwnerPIN.update([BSB)V
 					aload_0;
-					invokevirtual 6;		// javacard/framework/Applet.register()V
+					invokevirtual 10;		// javacard/framework/Applet.register()V
 					return;
+		}
+
+		.method private initKeyDES()V {
+			.stack 4;
+			.locals 1;
+
+				L0:	aload_0;
+					sconst_3;
+					bspush 64;
+					sconst_0;
+					invokestatic 12;		// javacard/security/KeyBuilder.buildKey(BSZ)Ljavacard/security/Key;
+					putfield_a 2;		// reference applet/TheApplet.secretDESKey
+					getfield_a_this 2;		// reference applet/TheApplet.secretDESKey
+					checkcast 0 14;		// T_CLASSORINTERFACE javacard/security/DESKey
+					getstatic_a 15;		// reference applet/TheApplet.theDESKey
+					sconst_0;
+					invokeinterface 3 14 5;		// javacard/security/DESKey
+					aload_0;
+					sconst_1;
+					putfield_b 3;		// boolean applet/TheApplet.keyDES
+				L1:	goto L3;
+				L2:	astore_1;
+					aload_0;
+					sconst_0;
+					putfield_b 3;		// boolean applet/TheApplet.keyDES
+				L3:	return;
+			.exceptionTable {
+				// start_block end_block handler_block catch_type_index
+				L0 L1 L2 11;
+			}
+		}
+
+		.method private initDES_ECB_NOPAD()V {
+			.stack 3;
+			.locals 1;
+
+				L0:	getfield_b_this 3;		// boolean applet/TheApplet.keyDES
+					ifeq L4;
+				L1:	aload_0;
+					sconst_5;
+					sconst_0;
+					invokestatic 17;		// javacardx/crypto/Cipher.getInstance(BZ)Ljavacardx/crypto/Cipher;
+					putfield_a 4;		// reference applet/TheApplet.cDES_ECB_NOPAD_enc
+					aload_0;
+					sconst_5;
+					sconst_0;
+					invokestatic 17;		// javacardx/crypto/Cipher.getInstance(BZ)Ljavacardx/crypto/Cipher;
+					putfield_a 5;		// reference applet/TheApplet.cDES_ECB_NOPAD_dec
+					getfield_a_this 4;		// reference applet/TheApplet.cDES_ECB_NOPAD_enc
+					getfield_a_this 2;		// reference applet/TheApplet.secretDESKey
+					sconst_2;
+					invokevirtual 20;		// javacardx/crypto/Cipher.init(Ljavacard/security/Key;B)V
+					getfield_a_this 5;		// reference applet/TheApplet.cDES_ECB_NOPAD_dec
+					getfield_a_this 2;		// reference applet/TheApplet.secretDESKey
+					sconst_1;
+					invokevirtual 20;		// javacardx/crypto/Cipher.init(Ljavacard/security/Key;B)V
+					aload_0;
+					sconst_1;
+					putfield_b 6;		// boolean applet/TheApplet.DES_ECB_NOPAD
+				L2:	goto L4;
+				L3:	astore_1;
+					aload_0;
+					sconst_0;
+					putfield_b 6;		// boolean applet/TheApplet.DES_ECB_NOPAD
+				L4:	return;
+			.exceptionTable {
+				// start_block end_block handler_block catch_type_index
+				L1 L2 L3 11;
+			}
 		}
 
 		.method public static install([BSB)V 1 {
 			.stack 2;
 			.locals 0;
 
-				L0:	new 7;		// applet/TheApplet
+				L0:	new 22;		// applet/TheApplet
 					dup;
-					invokespecial 8;		// applet/TheApplet.<init>()V
+					invokespecial 23;		// applet/TheApplet.<init>()V
 					pop;
 					return;
 		}
@@ -288,11 +382,11 @@
 			.stack 1;
 			.locals 0;
 
-				L0:	getstatic_a 3;		// reference applet/TheApplet.readpin
-					invokevirtual 9;		// javacard/framework/OwnerPIN.getTriesRemaining()B
+				L0:	getstatic_a 7;		// reference applet/TheApplet.readpin
+					invokevirtual 24;		// javacard/framework/OwnerPIN.getTriesRemaining()B
 					ifeq L2;
-				L1:	getstatic_a 5;		// reference applet/TheApplet.writepin
-					invokevirtual 9;		// javacard/framework/OwnerPIN.getTriesRemaining()B
+				L1:	getstatic_a 9;		// reference applet/TheApplet.writepin
+					invokevirtual 24;		// javacard/framework/OwnerPIN.getTriesRemaining()B
 					ifne L3;
 				L2:	sconst_0;
 					sreturn;
@@ -304,10 +398,10 @@
 			.stack 1;
 			.locals 0;
 
-				L0:	getstatic_a 3;		// reference applet/TheApplet.readpin
-					invokevirtual 10;		// javacard/framework/OwnerPIN.reset()V
-					getstatic_a 5;		// reference applet/TheApplet.writepin
-					invokevirtual 10;		// javacard/framework/OwnerPIN.reset()V
+				L0:	getstatic_a 7;		// reference applet/TheApplet.readpin
+					invokevirtual 25;		// javacard/framework/OwnerPIN.reset()V
+					getstatic_a 9;		// reference applet/TheApplet.writepin
+					invokevirtual 25;		// javacard/framework/OwnerPIN.reset()V
 					return;
 		}
 
@@ -319,10 +413,10 @@
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_2;
-					invokevirtual 11;		// javacard/framework/APDU.setIncomingAndReceive()S
+					invokevirtual 26;		// javacard/framework/APDU.setIncomingAndReceive()S
 					pop;
 					aload_2;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
+					invokevirtual 27;		// javacard/framework/APDU.getBuffer()[B
 					astore_3;
 					aload_1;
 					aload_3;
@@ -330,112 +424,62 @@
 					aload_3;
 					sconst_4;
 					baload;
-					invokevirtual 13;		// javacard/framework/OwnerPIN.check([BSB)Z
+					invokevirtual 28;		// javacard/framework/OwnerPIN.check([BSB)Z
 					ifne L2;
 				L1:	sspush 25344;
-					invokestatic 14;		// javacard/framework/ISOException.throwIt(S)V
+					invokestatic 29;		// javacard/framework/ISOException.throwIt(S)V
 				L2:	return;
 		}
 
 		.method public process(Ljavacard/framework/APDU;)V 7 {
-			.stack 2;
+			.stack 4;
 			.locals 1;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_0;
-					invokevirtual 15;		// javacard/framework/Applet.selectingApplet()Z
+					invokevirtual 30;		// javacard/framework/Applet.selectingApplet()Z
 					sconst_1;
 					if_scmpne L2;
 				L1:	return;
 				L2:	aload_1;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
+					invokevirtual 27;		// javacard/framework/APDU.getBuffer()[B
 					astore_2;
 					aload_2;
 					sconst_1;
 					baload;
-					stableswitch L25 1 38 L21 L17 L16 L15 L14 L13 L12 L11 L10 L25 L25 L25 L25 L25 L25 L9 L8 L7 L6 L5 L25 L25 L25 L25 L25 L25 L25 L25 L25 L25 L25 L25 L25 L25 L25 L25 L4 L3;
+					slookupswitch L10 5 9 L9 32 L5 33 L7 37 L4 38 L3;
 				L3:	aload_0;
 					aload_1;
-					invokevirtual 16;		// applet/TheApplet.getFileByNumber(Ljavacard/framework/APDU;)V
-					goto_w L26;
+					invokevirtual 31;		// applet/TheApplet.getFileByNumber(Ljavacard/framework/APDU;)V
+					goto L11;
 				L4:	aload_0;
 					aload_1;
-					invokevirtual 17;		// applet/TheApplet.listFilesStored(Ljavacard/framework/APDU;)V
-					goto_w L26;
-				L5:	aload_0;
-					aload_1;
-					invokevirtual 18;		// applet/TheApplet.updateCardKey(Ljavacard/framework/APDU;)V
-					goto_w L26;
+					invokevirtual 32;		// applet/TheApplet.listFilesStored(Ljavacard/framework/APDU;)V
+					goto L11;
+				L5:	getfield_b_this 6;		// boolean applet/TheApplet.DES_ECB_NOPAD
+					ifeq L11;
 				L6:	aload_0;
 					aload_1;
-					invokevirtual 19;		// applet/TheApplet.uncipherFileByCard(Ljavacard/framework/APDU;)V
-					goto_w L26;
-				L7:	aload_0;
-					aload_1;
-					invokevirtual 20;		// applet/TheApplet.cipherFileByCard(Ljavacard/framework/APDU;)V
-					goto L26;
+					getfield_a_this 4;		// reference applet/TheApplet.cDES_ECB_NOPAD_enc
+					bspush 64;
+					invokespecial 33;		// applet/TheApplet.cipherGeneric(Ljavacard/framework/APDU;Ljavacardx/crypto/Cipher;S)V
+					goto L11;
+				L7:	getfield_b_this 6;		// boolean applet/TheApplet.DES_ECB_NOPAD
+					ifeq L11;
 				L8:	aload_0;
 					aload_1;
-					invokevirtual 21;		// applet/TheApplet.cipherAndUncipherNameByCard(Ljavacard/framework/APDU;)V
-					goto L26;
+					getfield_a_this 5;		// reference applet/TheApplet.cDES_ECB_NOPAD_dec
+					bspush 64;
+					invokespecial 33;		// applet/TheApplet.cipherGeneric(Ljavacard/framework/APDU;Ljavacardx/crypto/Cipher;S)V
+					goto L11;
 				L9:	aload_0;
 					aload_1;
-					invokevirtual 22;		// applet/TheApplet.readFileFromCard(Ljavacard/framework/APDU;)V
-					goto L26;
-				L10:	aload_0;
-					aload_1;
-					invokevirtual 23;		// applet/TheApplet.writeFileToCard(Ljavacard/framework/APDU;)V
-					goto L26;
-				L11:	aload_0;
-					aload_1;
-					invokevirtual 24;		// applet/TheApplet.updateWritePIN(Ljavacard/framework/APDU;)V
-					goto L26;
-				L12:	aload_0;
-					aload_1;
-					invokevirtual 25;		// applet/TheApplet.updateReadPIN(Ljavacard/framework/APDU;)V
-					goto L26;
-				L13:	aload_0;
-					aload_1;
-					invokevirtual 26;		// applet/TheApplet.displayPINSecurity(Ljavacard/framework/APDU;)V
-					goto L26;
-				L14:	aload_0;
-					aload_1;
-					invokevirtual 27;		// applet/TheApplet.desactivateActivatePINSecurity(Ljavacard/framework/APDU;)V
-					goto L26;
-				L15:	aload_0;
-					aload_1;
-					invokevirtual 28;		// applet/TheApplet.enterReadPIN(Ljavacard/framework/APDU;)V
-					goto L26;
-				L16:	aload_0;
-					aload_1;
-					invokevirtual 29;		// applet/TheApplet.enterWritePIN(Ljavacard/framework/APDU;)V
-					goto L26;
-				L17:	getstatic_b 30;		// boolean applet/TheApplet.pinsecurity
-					ifeq L20;
-				L18:	getstatic_a 3;		// reference applet/TheApplet.readpin
-					invokevirtual 31;		// javacard/framework/OwnerPIN.isValidated()Z
-					ifne L20;
-				L19:	sspush 25345;
-					invokestatic 14;		// javacard/framework/ISOException.throwIt(S)V
-				L20:	aload_0;
-					aload_1;
-					invokevirtual 32;		// applet/TheApplet.readNameFromCard(Ljavacard/framework/APDU;)V
-					goto L26;
-				L21:	getstatic_b 30;		// boolean applet/TheApplet.pinsecurity
-					ifeq L24;
-				L22:	getstatic_a 3;		// reference applet/TheApplet.readpin
-					invokevirtual 31;		// javacard/framework/OwnerPIN.isValidated()Z
-					ifne L24;
-				L23:	sspush 25345;
-					invokestatic 14;		// javacard/framework/ISOException.throwIt(S)V
-				L24:	aload_0;
-					aload_1;
-					invokevirtual 33;		// applet/TheApplet.writeNameToCard(Ljavacard/framework/APDU;)V
-					goto L26;
-				L25:	sspush 27904;
-					invokestatic 14;		// javacard/framework/ISOException.throwIt(S)V
-				L26:	return;
+					invokevirtual 34;		// applet/TheApplet.writeFileToCard(Ljavacard/framework/APDU;)V
+					goto L11;
+				L10:	sspush 27904;
+					invokestatic 29;		// javacard/framework/ISOException.throwIt(S)V
+				L11:	return;
 		}
 
 		.method  getFileByNumber(Ljavacard/framework/APDU;)V 129 {
@@ -445,10 +489,10 @@
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
+					invokevirtual 27;		// javacard/framework/APDU.getBuffer()[B
 					astore_2;
 					aload_1;
-					invokevirtual 11;		// javacard/framework/APDU.setIncomingAndReceive()S
+					invokevirtual 26;		// javacard/framework/APDU.setIncomingAndReceive()S
 					pop;
 					aload_2;
 					sconst_2;
@@ -458,7 +502,7 @@
 				L1:	aload_2;
 					sconst_3;
 					baload;
-					putstatic_b 34;		// byte applet/TheApplet.numFileReq
+					putstatic_b 35;		// byte applet/TheApplet.numFileReq
 					aload_2;
 					sconst_0;
 					aload_2;
@@ -466,95 +510,95 @@
 					baload;
 					bastore;
 					aload_2;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					baload;
 					sconst_1;
 					sadd;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					baload;
 					sconst_1;
 					sadd;
 					baload;
 					bastore;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					baload;
 					sconst_2;
 					sadd;
 					sstore_3;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					sconst_1;
 					sadd;
 					s2b;
 					aload_2;
 					sconst_1;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					baload;
-					invokestatic 37;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 38;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_1;
 					sconst_0;
 					sload_3;
-					invokevirtual 38;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
+					invokevirtual 39;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
 				L2:	aload_2;
 					sconst_2;
 					baload;
 					sconst_2;
 					if_scmpne L4;
 				L3:	aload_0;
-					getstatic_b 34;		// byte applet/TheApplet.numFileReq
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					getstatic_b 35;		// byte applet/TheApplet.numFileReq
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					bspush 20;
 					aload_2;
 					sconst_3;
 					baload;
 					smul;
 					sadd;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
-					getstatic_b 34;		// byte applet/TheApplet.numFileReq
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					getstatic_b 35;		// byte applet/TheApplet.numFileReq
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					baload;
 					sconst_2;
 					sadd;
 					sadd;
 					sstore_3;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					sload_3;
 					aload_2;
 					sconst_0;
 					bspush 20;
-					invokestatic 37;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 38;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_1;
 					sconst_0;
 					bspush 20;
-					invokevirtual 38;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
+					invokevirtual 39;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
 				L4:	return;
 		}
 
@@ -565,10 +609,10 @@
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
+					invokevirtual 27;		// javacard/framework/APDU.getBuffer()[B
 					astore_2;
 					aload_1;
-					invokevirtual 11;		// javacard/framework/APDU.setIncomingAndReceive()S
+					invokevirtual 26;		// javacard/framework/APDU.setIncomingAndReceive()S
 					pop;
 					aload_2;
 					sconst_2;
@@ -580,13 +624,13 @@
 					ifne L3;
 				L2:	aload_2;
 					sconst_0;
-					getstatic_s 39;		// short applet/TheApplet.nbFiles
+					getstatic_s 40;		// short applet/TheApplet.nbFiles
 					s2b;
 					bastore;
 					aload_1;
 					sconst_0;
 					sconst_1;
-					invokevirtual 38;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
+					invokevirtual 39;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
 				L3:	aload_2;
 					sconst_2;
 					baload;
@@ -599,61 +643,61 @@
 					baload;
 					bastore;
 					aload_2;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					baload;
 					sconst_1;
 					sadd;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					baload;
 					sconst_1;
 					sadd;
 					baload;
 					bastore;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					baload;
 					sconst_2;
 					sadd;
 					sstore_3;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					sconst_1;
 					sadd;
 					s2b;
 					aload_2;
 					sconst_1;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					aload_0;
 					aload_2;
 					sconst_3;
 					baload;
-					invokevirtual 36;		// applet/TheApplet.getindex(B)S
+					invokevirtual 37;		// applet/TheApplet.getindex(B)S
 					baload;
-					invokestatic 37;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 38;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
 					aload_1;
 					sconst_0;
 					sload_3;
-					invokevirtual 38;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
+					invokevirtual 39;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
 				L5:	return;
 		}
 
@@ -670,12 +714,12 @@
 					if_scmpge L3;
 				L2:	sload_2;
 					sconst_2;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					sload_2;
 					baload;
 					sadd;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					getstatic_a 35;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
+					getstatic_a 36;		// reference applet/TheApplet.NVR
 					sload_2;
 					baload;
 					sconst_1;
@@ -696,7 +740,39 @@
 					sreturn;
 		}
 
-		.method  updateCardKey(Ljavacard/framework/APDU;)V 132 {
+		.method private cipherGeneric(Ljavacard/framework/APDU;Ljavacardx/crypto/Cipher;S)V {
+			.stack 6;
+			.locals 1;
+
+			.descriptor	Ljavacard/framework/APDU;	0.10;
+			.descriptor	Ljavacardx/crypto/Cipher;	1.1;
+
+				L0:	aload_1;
+					invokevirtual 27;		// javacard/framework/APDU.getBuffer()[B
+					astore 4;
+					aload_1;
+					invokevirtual 26;		// javacard/framework/APDU.setIncomingAndReceive()S
+					pop;
+					aload_2;
+					aload 4;
+					sconst_5;
+					aload 4;
+					sconst_4;
+					baload;
+					aload 4;
+					sconst_5;
+					invokevirtual 41;		// javacardx/crypto/Cipher.doFinal([BSS[BS)S
+					pop;
+					aload_1;
+					sconst_5;
+					aload 4;
+					sconst_4;
+					baload;
+					invokevirtual 39;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
+					return;
+		}
+
+		.method  uncipherFileByCard(Ljavacard/framework/APDU;)V 132 {
 			.stack 0;
 			.locals 0;
 
@@ -705,7 +781,7 @@
 				L0:	return;
 		}
 
-		.method  uncipherFileByCard(Ljavacard/framework/APDU;)V 133 {
+		.method  cipherFileByCard(Ljavacard/framework/APDU;)V 133 {
 			.stack 0;
 			.locals 0;
 
@@ -714,44 +790,17 @@
 				L0:	return;
 		}
 
-		.method  cipherFileByCard(Ljavacard/framework/APDU;)V 134 {
-			.stack 0;
-			.locals 0;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	return;
-		}
-
-		.method  cipherAndUncipherNameByCard(Ljavacard/framework/APDU;)V 135 {
-			.stack 0;
-			.locals 0;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	return;
-		}
-
-		.method  readFileFromCard(Ljavacard/framework/APDU;)V 136 {
-			.stack 0;
-			.locals 0;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	return;
-		}
-
-		.method  writeFileToCard(Ljavacard/framework/APDU;)V 137 {
+		.method  writeFileToCard(Ljavacard/framework/APDU;)V 134 {
 			.stack 6;
 			.locals 1;
 
 			.descriptor	Ljavacard/framework/APDU;	0.10;
 
 				L0:	aload_1;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
+					invokevirtual 27;		// javacard/framework/APDU.getBuffer()[B
 					astore_2;
 					aload_1;
-					invokevirtual 11;		// javacard/framework/APDU.setIncomingAndReceive()S
+					invokevirtual 26;		// javacard/framework/APDU.setIncomingAndReceive()S
 					pop;
 					aload_2;
 					sconst_2;
@@ -763,23 +812,23 @@
 					ifne L3;
 				L2:	aload_2;
 					sconst_4;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					getstatic_s 40;		// short applet/TheApplet.index
+					getstatic_a 36;		// reference applet/TheApplet.NVR
+					getstatic_s 42;		// short applet/TheApplet.index
 					aload_2;
 					sconst_4;
 					baload;
 					sconst_1;
 					sadd;
-					invokestatic 37;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 38;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
-					getstatic_s 41;		// short applet/TheApplet.indexTmp
+					getstatic_s 43;		// short applet/TheApplet.indexTmp
 					aload_2;
 					sconst_4;
 					baload;
 					sconst_2;
 					sadd;
 					sadd;
-					putstatic_s 41;		// short applet/TheApplet.indexTmp
+					putstatic_s 43;		// short applet/TheApplet.indexTmp
 					goto L7;
 				L3:	aload_2;
 					sconst_2;
@@ -787,19 +836,19 @@
 					ifne L5;
 				L4:	aload_2;
 					sconst_5;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					getstatic_s 40;		// short applet/TheApplet.index
-					getstatic_s 41;		// short applet/TheApplet.indexTmp
+					getstatic_a 36;		// reference applet/TheApplet.NVR
+					getstatic_s 42;		// short applet/TheApplet.index
+					getstatic_s 43;		// short applet/TheApplet.indexTmp
 					sadd;
 					bspush 20;
-					invokestatic 37;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 38;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
-					getstatic_s 41;		// short applet/TheApplet.indexTmp
+					getstatic_s 43;		// short applet/TheApplet.indexTmp
 					aload_2;
 					sconst_4;
 					baload;
 					sadd;
-					putstatic_s 41;		// short applet/TheApplet.indexTmp
+					putstatic_s 43;		// short applet/TheApplet.indexTmp
 					goto L7;
 				L5:	aload_2;
 					sconst_2;
@@ -808,17 +857,17 @@
 					if_scmpne L7;
 				L6:	aload_2;
 					sconst_5;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					getstatic_s 40;		// short applet/TheApplet.index
-					getstatic_s 41;		// short applet/TheApplet.indexTmp
+					getstatic_a 36;		// reference applet/TheApplet.NVR
+					getstatic_s 42;		// short applet/TheApplet.index
+					getstatic_s 43;		// short applet/TheApplet.indexTmp
 					sadd;
 					bspush 20;
-					invokestatic 37;		// javacard/framework/Util.arrayCopy([BS[BSS)S
+					invokestatic 38;		// javacard/framework/Util.arrayCopy([BS[BSS)S
 					pop;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					getstatic_s 40;		// short applet/TheApplet.index
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					getstatic_s 40;		// short applet/TheApplet.index
+					getstatic_a 36;		// reference applet/TheApplet.NVR
+					getstatic_s 42;		// short applet/TheApplet.index
+					getstatic_a 36;		// reference applet/TheApplet.NVR
+					getstatic_s 42;		// short applet/TheApplet.index
 					baload;
 					sconst_1;
 					sadd;
@@ -827,202 +876,23 @@
 					sconst_3;
 					baload;
 					bastore;
-					getstatic_s 41;		// short applet/TheApplet.indexTmp
+					getstatic_s 43;		// short applet/TheApplet.indexTmp
 					aload_2;
 					sconst_4;
 					baload;
 					sadd;
-					putstatic_s 41;		// short applet/TheApplet.indexTmp
-					getstatic_s 40;		// short applet/TheApplet.index
-					getstatic_s 41;		// short applet/TheApplet.indexTmp
+					putstatic_s 43;		// short applet/TheApplet.indexTmp
+					getstatic_s 42;		// short applet/TheApplet.index
+					getstatic_s 43;		// short applet/TheApplet.indexTmp
 					sadd;
-					putstatic_s 40;		// short applet/TheApplet.index
+					putstatic_s 42;		// short applet/TheApplet.index
 					sconst_0;
-					putstatic_s 41;		// short applet/TheApplet.indexTmp
-					getstatic_s 39;		// short applet/TheApplet.nbFiles
+					putstatic_s 43;		// short applet/TheApplet.indexTmp
+					getstatic_s 40;		// short applet/TheApplet.nbFiles
 					sconst_1;
 					sadd;
-					putstatic_s 39;		// short applet/TheApplet.nbFiles
+					putstatic_s 40;		// short applet/TheApplet.nbFiles
 				L7:	return;
-		}
-
-		.method  updateWritePIN(Ljavacard/framework/APDU;)V 138 {
-			.stack 4;
-			.locals 1;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	getstatic_b 30;		// boolean applet/TheApplet.pinsecurity
-					ifeq L3;
-				L1:	getstatic_a 5;		// reference applet/TheApplet.writepin
-					invokevirtual 31;		// javacard/framework/OwnerPIN.isValidated()Z
-					ifne L3;
-				L2:	sspush 25345;
-					invokestatic 14;		// javacard/framework/ISOException.throwIt(S)V
-				L3:	aload_1;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
-					astore_2;
-					aload_1;
-					invokevirtual 11;		// javacard/framework/APDU.setIncomingAndReceive()S
-					pop;
-					getstatic_a 5;		// reference applet/TheApplet.writepin
-					aload_2;
-					sconst_5;
-					sconst_4;
-					invokevirtual 4;		// javacard/framework/OwnerPIN.update([BSB)V
-					return;
-		}
-
-		.method  updateReadPIN(Ljavacard/framework/APDU;)V 139 {
-			.stack 4;
-			.locals 1;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	getstatic_b 30;		// boolean applet/TheApplet.pinsecurity
-					ifeq L3;
-				L1:	getstatic_a 3;		// reference applet/TheApplet.readpin
-					invokevirtual 31;		// javacard/framework/OwnerPIN.isValidated()Z
-					ifne L3;
-				L2:	sspush 25345;
-					invokestatic 14;		// javacard/framework/ISOException.throwIt(S)V
-				L3:	aload_1;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
-					astore_2;
-					aload_1;
-					invokevirtual 11;		// javacard/framework/APDU.setIncomingAndReceive()S
-					pop;
-					getstatic_a 3;		// reference applet/TheApplet.readpin
-					aload_2;
-					sconst_5;
-					sconst_4;
-					invokevirtual 4;		// javacard/framework/OwnerPIN.update([BSB)V
-					return;
-		}
-
-		.method  displayPINSecurity(Ljavacard/framework/APDU;)V 140 {
-			.stack 6;
-			.locals 2;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	aload_1;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
-					astore_2;
-					sconst_2;
-					newarray 11;
-					astore_3;
-					aload_2;
-					sconst_0;
-					aload_2;
-					sconst_1;
-					getstatic_b 30;		// boolean applet/TheApplet.pinsecurity
-					ifeq L2;
-				L1:	sconst_1;
-					goto L3;
-				L2:	sconst_0;
-				L3:	dup_x 19;
-					bastore;
-					bastore;
-					aload_1;
-					sconst_0;
-					sconst_2;
-					invokevirtual 38;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
-					return;
-		}
-
-		.method  desactivateActivatePINSecurity(Ljavacard/framework/APDU;)V 141 {
-			.stack 1;
-			.locals 0;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	getstatic_b 30;		// boolean applet/TheApplet.pinsecurity
-					ifne L2;
-				L1:	sconst_1;
-					goto L3;
-				L2:	sconst_0;
-				L3:	putstatic_b 30;		// boolean applet/TheApplet.pinsecurity
-					return;
-		}
-
-		.method  enterReadPIN(Ljavacard/framework/APDU;)V 142 {
-			.stack 3;
-			.locals 0;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	aload_0;
-					getstatic_a 3;		// reference applet/TheApplet.readpin
-					aload_1;
-					invokevirtual 42;		// applet/TheApplet.verify(Ljavacard/framework/OwnerPIN;Ljavacard/framework/APDU;)V
-					return;
-		}
-
-		.method  enterWritePIN(Ljavacard/framework/APDU;)V 143 {
-			.stack 3;
-			.locals 0;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	aload_0;
-					getstatic_a 5;		// reference applet/TheApplet.writepin
-					aload_1;
-					invokevirtual 42;		// applet/TheApplet.verify(Ljavacard/framework/OwnerPIN;Ljavacard/framework/APDU;)V
-					return;
-		}
-
-		.method  readNameFromCard(Ljavacard/framework/APDU;)V 144 {
-			.stack 6;
-			.locals 1;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	aload_1;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
-					astore_2;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					sconst_1;
-					aload_2;
-					sconst_0;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					sconst_0;
-					baload;
-					invokestatic 37;		// javacard/framework/Util.arrayCopy([BS[BSS)S
-					pop;
-					aload_1;
-					sconst_0;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					sconst_0;
-					baload;
-					invokevirtual 38;		// javacard/framework/APDU.setOutgoingAndSend(SS)V
-					return;
-		}
-
-		.method  writeNameToCard(Ljavacard/framework/APDU;)V 145 {
-			.stack 6;
-			.locals 1;
-
-			.descriptor	Ljavacard/framework/APDU;	0.10;
-
-				L0:	aload_1;
-					invokevirtual 12;		// javacard/framework/APDU.getBuffer()[B
-					astore_2;
-					aload_1;
-					invokevirtual 11;		// javacard/framework/APDU.setIncomingAndReceive()S
-					pop;
-					aload_2;
-					sconst_4;
-					getstatic_a 35;		// reference applet/TheApplet.NVR
-					sconst_0;
-					aload_2;
-					sconst_4;
-					baload;
-					sconst_1;
-					sadd;
-					invokestatic 37;		// javacard/framework/Util.arrayCopy([BS[BSS)S
-					pop;
-					return;
 		}
 
 	}

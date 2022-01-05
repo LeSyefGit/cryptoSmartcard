@@ -166,9 +166,9 @@ public class TheClient {
 	    t[0] = CLA_TEST;
 	    t[1] = typeINS;
 	    t[2] = P1_EMPTY;
-	    t[3] = P2_EMPTY;
+		t[3] = P2_EMPTY;
 
-            this.sendAPDU(new CommandAPDU( t ));
+        this.sendAPDU(new CommandAPDU( t ));
     } 
     
     
