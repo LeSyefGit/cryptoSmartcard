@@ -50,8 +50,6 @@ public class TheApplet extends Applet {
 	    secretDESKey, secretDES2Key, secretDES3Key;
 
 	boolean 
-		pseudoRandom, secureRandom,
-	    SHA1, MD5, RIPEMD160,
 	    keyDES, DES_ECB_NOPAD, DES_CBC_NOPAD;
 
 	private byte[] dataToCipher = {1,2,3,4,5,6,7,8};
@@ -132,14 +130,10 @@ public class TheApplet extends Applet {
 		switch( buffer[1] )		{
 			case GETFILEBYNUMBER: getFileByNumber(apdu ); break;
 			case LISTFILESSTORED: listFilesStored( apdu ); break;
-			//case UNCIPHERFILEBYCARD: uncipherFileByCard( apdu ); break;
-			//case CIPHERFILEBYCARD: cipherFileByCard( apdu ); break;
-
 			case INS_DES_ECB_NOPAD_ENC: if( DES_ECB_NOPAD )
                 cipherGeneric( apdu, cDES_ECB_NOPAD_enc, KeyBuilder.LENGTH_DES ); break;//chiffrer  les données venant du pc
             case INS_DES_ECB_NOPAD_DEC: if( DES_ECB_NOPAD ) 
-				cipherGeneric( apdu, cDES_ECB_NOPAD_dec, KeyBuilder.LENGTH_DES  ); break;
-				
+				cipherGeneric( apdu, cDES_ECB_NOPAD_dec, KeyBuilder.LENGTH_DES  ); break;	
 			case WRITEFILETOCARD: writeFileToCard( apdu ); break;
 			default: ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
 		}
@@ -169,14 +163,11 @@ public class TheApplet extends Applet {
 		byte[] buffer = apdu.getBuffer();
 		apdu.setIncomingAndReceive();
 
-		
-
 		if (buffer[2]==0 && buffer[3]==0){
 			buffer[0]= (byte) nbFiles;
 			apdu.setOutgoingAndSend( (short)0, (byte)(1));
 		}
 		if(buffer[2]==(byte)1){
-			
 			buffer[0]= (byte) buffer[3];
 			buffer[(NVR[ getindex(buffer[3])]+1)]= NVR[NVR[ getindex(buffer[3]) ]+1];
 			short val = (short) (NVR[getindex(buffer[3])]+2);
@@ -202,9 +193,6 @@ public class TheApplet extends Applet {
 		cipher.doFinal( buffer, (short)5, (short)buffer[4], buffer, (short)5);
         
         apdu.setOutgoingAndSend( (short)5, (short)buffer[4]);
-
-		// Write the method ciphering/unciphering data from the computer.
-		// The result is sent back to the computer.
 	}
 
 

@@ -1,5 +1,5 @@
 // converted by version 1.3
-// on Wed Jan 05 04:23:05 CET 2022
+// on Wed Jan 05 22:51:10 CET 2022
 
 .package applet {
 	.aid 0xA0:0x0:0x0:0x0:0x62:0x3:0x1:0xC:0x6;
@@ -132,14 +132,9 @@
 			private 2.0 secretDES3Key 4;		// Ljavacard/security/Key;
 			private byte[] dataToCipher 5;		// [B
 			private byte[] ciphered 6;		// [B
-			 boolean pseudoRandom 7;		// Z
-			 boolean secureRandom 8;		// Z
-			 boolean SHA1 9;		// Z
-			 boolean MD5 10;		// Z
-			 boolean RIPEMD160 11;		// Z
-			 boolean keyDES 12;		// Z
-			 boolean DES_ECB_NOPAD 13;		// Z
-			 boolean DES_CBC_NOPAD 14;		// Z
+			 boolean keyDES 7;		// Z
+			 boolean DES_ECB_NOPAD 8;		// Z
+			 boolean DES_CBC_NOPAD 9;		// Z
 			static final short DATAMAXSIZE = 32;		// S
 			static short index;		// S
 			static short indexTmp;		// S

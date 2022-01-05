@@ -176,7 +176,6 @@ public class TheClient {
 				if (ch != file2.read()) {
 					flag = false;
 				}
-				System.out.println(ch);
 			}
 			if(file2.read() != -1) flag = false;
 
@@ -311,9 +310,11 @@ public class TheClient {
 
 			//trunks handling
 			short finTrunkLen = (short)0;
+			int first = 0;
 
-			while (ch != -1 ) {
-				for(int i=0; i< DATACRYPTOSIZE ;i++){
+			while ((ch = file1.read()) != -1 ) {				
+				chunk[0]= (byte) ch;
+				for(int i=1; i< DATACRYPTOSIZE ;i++){
 					ch = file1.read();
 					chunk[i]=(byte)ch;
 				}
@@ -325,9 +326,8 @@ public class TheClient {
 				}
 				System.out.print("\r\n");
 
-				if(ch == -1){  // for the last trunk
+				if(isSalt(unciphered)){  // for the last trunk
 					finTrunkLen = (short)(DATACRYPTOSIZE - (short)unciphered[DATACRYPTOSIZE-1]);
-					System.out.println("lskdjf "+ DATACRYPTOSIZE);
 					byte[] finTrunk= new byte[finTrunkLen] ;
 					System.arraycopy(unciphered,(short)0,finTrunk,(short)0,(short)finTrunkLen);
 					out.write(finTrunk);
@@ -343,6 +343,24 @@ public class TheClient {
 		} catch(IOException e){
 			System.out.println("Error with the files");
 		}
+	}
+
+	// return true if there is salt inside the byte array
+	boolean isSalt(byte[] bytes){
+		int lastElem = bytes[bytes.length -1];
+		if(  lastElem < 1 || (DATACRYPTOSIZE -1) < lastElem ) return false;
+		int count =0;
+		for (int i= (DATACRYPTOSIZE -1) ; (DATACRYPTOSIZE -1 - lastElem) < i; i--){
+			if (bytes[i] == lastElem) count++;
+		}
+
+		System.out.println("the salt is "+ count);
+
+		if(count == lastElem) 
+			return true;
+		else 
+			return false;
+
 	}
 
 
@@ -379,11 +397,6 @@ public class TheClient {
 				}
 				nbChunk++;
 				response = cipherGeneric(INS_DES_ECB_NOPAD_ENC, chunk);
-
-				for (int i=0 ; i < response.length;  i++){
-					System.out.print(response[i] +" ");
-				}
-				System.out.print("\r\n");
 				out.write(response);
 
 			}
@@ -491,12 +504,12 @@ public class TheClient {
 	void runAction( int choice ) {
 		switch( choice ) {
 
-			case 26: getFileByNumber(); break;
-			case 25: listFilesStored(); break;
-			case 23: compareTwoFiles(); break;
-			case 13: uncipherFileByCard(); break;
-			case 12: cipherFileByCard(); break;
-			case 9: writeFileToCard(); break;
+			case 6: getFileByNumber(); break;
+			case 5: listFilesStored(); break;
+			case 4: writeFileToCard(); break;
+			case 3: compareTwoFiles(); break;
+			case 2: uncipherFileByCard(); break;
+			case 1: cipherFileByCard(); break;
 			case 0: exit(); break;
 			default: System.out.println( "unknown choice!" );
 		}
@@ -531,16 +544,12 @@ public class TheClient {
 
 	void printMenu() {
 		System.out.println( "" );
-
-		System.out.println( "26: get file by number" );
-		System.out.println( "25: list files of the card" );
-		System.out.println( "23: compare two files" );
-		System.out.println( "13: uncipher a file by the card" );
-		System.out.println( "12: cipher a file by the card" );
-		System.out.println( "9: write a file to the card" );
-
-		System.out.println( "20: testing cipher with card" );
-
+		System.out.println( "6: get file by number" );
+		System.out.println( "5: list files of the card" );
+		System.out.println( "4: write a file to the card" );
+		System.out.println( "3: compare two files" );
+		System.out.println( "2: uncipher a file by the card" );
+		System.out.println( "1: cipher a file by the card" );
 		System.out.println( "0: exit" );
 		System.out.print( "--> " );
 	}
